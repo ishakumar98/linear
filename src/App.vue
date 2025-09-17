@@ -34,41 +34,74 @@
       <!-- Section Anchors for scroll position tracking -->
       <div class="section-1-anchor" :style="{ top: '0px' }"></div>
       <div class="section-2-anchor" :style="{ top: section2Start + 'px' }"></div>
-      <div class="section-3-anchor" :style="{ top: section3Start + 'px' }"></div>
     </div>
 
     <!-- Fixed Content Layer -->
     <div class="fillFixed">
-      <!-- Section 1: Title Animation -->
-      <div class="section1" :class="{ active: currentSection === 1 }">
-        <!-- Getty's wrapper div structure -->
-        <div>
-          <div class="assetTransaction" :class="{ active: currentSection === 1 }">
-            <h1 class="transactionTitle title top" :style="topTitleStyle">
-              <span class="transactionTitle__inner">Hello, Linear</span>
-            </h1>
-            <h1 class="transactionTitle title bottom" :style="bottomTitleStyle">
-              <span class="transactionTitle__inner">I'm Isha</span>
-            </h1>
-            <div class="assetTransaction__media" :style="mediaStyle">
-              <div class="assetTransaction__mediaInner">
-                <div class="featuredAsset assetTransaction__img">
-                  <picture class="picture useFade featuredAsset__img loaded">
-                    <source media="(max-width: 1200px)" srcset="/Lilies.jpeg">
-                    <source media="(min-width: 1200px)" srcset="/Lilies.jpeg">
-                    <img src="/Lilies.jpeg" alt="La Jatte de lait by Berthe Morisot" loading="eager">
-                  </picture>
-                  <div class="imageCredits">
-                    <h2 class="imageCredits__title textPaintingDescription">
-                      <a href="#" target="_blank">La Jatte de lait</a>, Berthe Morisot
-                    </h2>
-                    <p class="imageCredits__credit textPaintingDescription small">Private Collection, Photograph Courtesy of Sotheby's, Inc. ©</p>
-                  </div>
+      <!-- Section 1: Multi-transaction structure -->
+      <div class="section1" :class="{ active: currentSection === 1 }" :style="section1BackgroundStyle">
+
+        <!-- Transaction 1: Hello Linear / I'm Isha -->
+        <div class="assetTransaction" :class="{ active: transaction1Active }">
+          <h1 class="transactionTitle title top" :style="transaction1TopTitleStyle">
+            <span class="transactionTitle__inner">Hello, Linear</span>
+          </h1>
+          <h1 class="transactionTitle title bottom" :style="transaction1BottomTitleStyle">
+            <span class="transactionTitle__inner">I'm Isha</span>
+          </h1>
+          <div class="assetTransaction__media" :style="transaction1MediaStyle">
+            <div class="assetTransaction__mediaInner">
+              <div class="featuredAsset assetTransaction__img">
+                <picture class="picture useFade featuredAsset__img loaded">
+                  <source media="(max-width: 1200px)" srcset="/Lilies.jpeg">
+                  <source media="(min-width: 1200px)" srcset="/Lilies.jpeg">
+                  <img src="/Lilies.jpeg" alt="La Jatte de lait by Berthe Morisot" loading="eager">
+                </picture>
+                <div class="imageCredits">
+                  <h2 class="imageCredits__title textPaintingDescription">
+                    <a href="#" target="_blank">La Jatte de lait</a>, Berthe Morisot
+                  </h2>
+                  <p class="imageCredits__credit textPaintingDescription small">Private Collection, Photograph Courtesy of Sotheby's, Inc. ©</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Transaction 2: Second content block -->
+        <div class="assetTransaction" :class="{ active: transaction2Active }">
+          <h1 class="transactionTitle title top" :style="transaction2TopTitleStyle">
+            <span class="transactionTitle__inner">Caravaggio</span>
+          </h1>
+          <h1 class="transactionTitle title bottom" :style="transaction2BottomTitleStyle">
+            <span class="transactionTitle__inner">Giuseppe Cesari</span>
+          </h1>
+          <div class="assetTransaction__media" :style="transaction2MediaStyle">
+            <div class="assetTransaction__mediaInner">
+              <div class="featuredAsset assetTransaction__img">
+                <picture class="picture useFade featuredAsset__img loaded">
+                  <source media="(max-width: 1200px)" srcset="/Lilies.jpeg">
+                  <source media="(min-width: 1200px)" srcset="/Lilies.jpeg">
+                  <img src="/Lilies.jpeg" alt="La Jatte de lait by Berthe Morisot" loading="eager">
+                </picture>
+                <div class="imageCredits">
+                  <h2 class="imageCredits__title textPaintingDescription">
+                    <a href="#" target="_blank">Boy with Basket of Fruit</a>, Caravaggio
+                  </h2>
+                  <p class="imageCredits__credit textPaintingDescription small">Galleria Borghese, © Galleria Borghese</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Block (appears when transaction 2 is active) -->
+        <div class="textBlock" :class="{ active: textBlockActive }" :style="textBlockStyle" style="width: 45rem;">
+          <p class="textBlock__inner">
+            300 years earlier in Rome, artist Giuseppe Cesari was Caravaggio's first teacher, and obtained two of the artist's most famous paintings.
+          </p>
+        </div>
+
       </div>
 
       <!-- Section 2: Text Block -->
@@ -81,13 +114,6 @@
         </div>
       </div>
 
-      <!-- Section 3: Final Content -->
-      <div class="section3" :class="{ active: currentSection === 3 }">
-        <div class="section-content">
-          <h2 class="section-title">Collectors, Museums and the Market</h2>
-          <p class="section-description">Discover the complex relationships between private collectors, museums, and the art market.</p>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -107,17 +133,28 @@ export default {
 
     // Getty-style dimensions (using viewport heights like Getty)
     const vh = window.innerHeight
-    const totalHeight = ref(vh * 60) // Getty uses 8950lvh, we'll use 60vh for simplicity
+    const totalHeight = ref(vh * 40)
     const section1Height = vh * 20
+    const transaction1Height = vh * 10  // First transaction within section 1
+    const transaction2Start = vh * 10   // Second transaction starts
+    const transaction2Height = vh * 10  // Second transaction height
     const section2Start = vh * 20
     const section2Height = vh * 20
-    const section3Start = vh * 40
 
     const sections = ref([
       { progress: 0 },
-      { progress: 0 },
       { progress: 0 }
     ])
+
+    // Transaction tracking - Getty style with overlapping active states
+    const transaction1Progress = ref(0)
+    const transaction2Progress = ref(0)
+    const textBlockProgress = ref(0)
+
+    // Active states for overlapping transactions
+    const transaction1Active = ref(false)
+    const transaction2Active = ref(false)
+    const textBlockActive = ref(false)
 
     // Three.js setup
     let scene, camera, renderer
@@ -130,92 +167,165 @@ export default {
       return scrollY.value / section1Height
     })
 
+    // Getty-style overlapping transaction logic
+    const updateTransactionStates = () => {
+      const scrollProgress = scrollY.value / section1Height
+
+      // Transaction 1: Active from 0% to 80% (elements move -100lvh over this range)
+      if (scrollProgress >= 0 && scrollProgress <= 0.8) {
+        transaction1Active.value = true
+        transaction1Progress.value = Math.min(1, scrollProgress / 0.8) // 0-1 over first 80%
+      } else {
+        transaction1Active.value = false
+        transaction1Progress.value = 1
+      }
+
+      // Transaction 2: Active from 20% to 100% (Caravaggio content)
+      if (scrollProgress >= 0.2 && scrollProgress <= 1.0) {
+        transaction2Active.value = true
+        transaction2Progress.value = Math.min(1, (scrollProgress - 0.2) / 0.8) // 0-1 over 20%-100%
+      } else {
+        transaction2Active.value = false
+        transaction2Progress.value = 0
+      }
+
+      // Text Block: Active from 50% to 100% (overlaps with Transaction 2)
+      if (scrollProgress >= 0.5 && scrollProgress <= 1.0) {
+        textBlockActive.value = true
+        textBlockProgress.value = Math.min(1, (scrollProgress - 0.5) / 0.5) // 0-1 over 50%-100%
+      } else {
+        textBlockActive.value = false
+        textBlockProgress.value = 0
+      }
+    }
+
     // Calculate current section based on scroll position
     const updateCurrentSection = () => {
       if (scrollY.value < section2Start) {
         currentSection.value = 1
         sections.value[0].progress = section1Progress.value
-      } else if (scrollY.value < section3Start) {
+        updateTransactionStates() // Update overlapping transaction states
+      } else {
         currentSection.value = 2
         sections.value[1].progress = (scrollY.value - section2Start) / section2Height
-      } else {
-        currentSection.value = 3
-        sections.value[2].progress = (scrollY.value - section3Start) / (totalHeight.value - section3Start)
       }
     }
 
-    // Getty-style transforms based on natural scroll position
-    const topTitleStyle = computed(() => {
-      const progress = section1Progress.value
+    // Transaction 1 styles - Getty approach with movement + scaling
+    const transaction1TopTitleStyle = computed(() => {
+      const progress = transaction1Progress.value
 
-      if (currentSection.value !== 1) {
-        return {
-          transform: `translate(0px, -120vh) scale(0.25)`,
-          opacity: 0
-        }
-      }
-
-      // Continuous movement based on scroll position
-      const translateY = -(progress * 80) // Move up 80vh over the course of section 1
-
-      // Fast scaling in first 20% of section
+      // Fast scaling in first 25% of transaction, then hold
       let scale = 1
-      if (progress <= 0.2) {
-        const scaleProgress = progress / 0.2
+      if (progress <= 0.25) {
+        const scaleProgress = progress / 0.25
         scale = 1 - (scaleProgress * 0.75) // Scale from 1 to 0.25
       } else {
         scale = 0.25
       }
 
+      // Getty style: Move to -100lvh over full transaction range
+      const translateY = -(progress * 100) // Move from 0 to -100lvh
+
       return {
-        transform: `translate(0px, ${translateY}vh) scale(${scale})`,
-        opacity: 1
+        transform: `translate3d(0px, ${translateY}lvh, 0px) scale(${scale})`
       }
     })
 
-    const bottomTitleStyle = computed(() => {
-      const progress = section1Progress.value
+    const transaction1BottomTitleStyle = computed(() => {
+      const progress = transaction1Progress.value
 
-      if (currentSection.value !== 1) {
-        return {
-          transform: `translate(0px, -120vh) scale(1)`,
-          opacity: 0
-        }
-      }
-
-      const translateY = -(progress * 80)
-
-      // Inverse scaling for bottom title
+      // Fast inverse scaling in first 25% (matching top title), then hold
       let scale = 0.25
-      if (progress <= 0.2) {
-        const scaleProgress = progress / 0.2
+      if (progress <= 0.25) {
+        const scaleProgress = progress / 0.25
         scale = 0.25 + (scaleProgress * 0.75) // Scale from 0.25 to 1
       } else {
         scale = 1
       }
 
+      // Getty style: Move to -100lvh (but different speed than top title)
+      const translateY = -(progress * 97) // Move slightly slower than top title
+
       return {
-        transform: `translate(0px, ${translateY}vh) scale(${scale})`,
-        opacity: 1
+        transform: `translate3d(0px, ${translateY}lvh, 0px) scale(${scale})`
       }
     })
 
-    const mediaStyle = computed(() => {
-      const progress = section1Progress.value
-
-      if (currentSection.value !== 1) {
-        return {
-          transform: `translate(0px, -100vh)`,
-          opacity: 0
-        }
-      }
-
-      // Slower parallax movement for image
-      const translateY = -(progress * 60)
+    const transaction1MediaStyle = computed(() => {
+      const progress = transaction1Progress.value
+      // Getty style: Move slower than titles for parallax effect
+      const translateY = -(progress * 75) // Move to about -75lvh (slower than titles)
 
       return {
-        transform: `translate(0px, ${translateY}vh)`,
-        opacity: 1
+        transform: `translate3d(0px, ${translateY}lvh, 0px)`
+      }
+    })
+
+    // Transaction 2 styles - starts off-screen, moves into view
+    const transaction2TopTitleStyle = computed(() => {
+      const progress = transaction2Progress.value
+
+      // Start at 100lvh (off-screen), move to final position
+      const translateY = 100 - (progress * 90) // 100lvh → 10lvh
+
+      return {
+        transform: `translate3d(0px, ${translateY}lvh, 0px)`
+      }
+    })
+
+    const transaction2BottomTitleStyle = computed(() => {
+      const progress = transaction2Progress.value
+      const translateY = 100 - (progress * 85) // Different final position
+
+      return {
+        transform: `translate3d(0px, ${translateY}lvh, 0px) scale(0.25)`
+      }
+    })
+
+    const transaction2MediaStyle = computed(() => {
+      const progress = transaction2Progress.value
+      const translateY = 100 - (progress * 95) // Media movement
+
+      return {
+        transform: `translate3d(0px, ${translateY}lvh, 0px)`
+      }
+    })
+
+    // Text block style - Getty approach with subtle scale animation
+    const textBlockStyle = computed(() => {
+      const progress = textBlockProgress.value
+
+      // Subtle scale animation like Getty
+      const scale = 0.85 + (progress * 0.15) // Scale from 0.85 to 1.0
+
+      return {
+        transform: `translate(-50%, -50%) scale(${scale})`
+      }
+    })
+
+    // Background style for section 1 (gradual transition based on overlapping transactions)
+    const section1BackgroundStyle = computed(() => {
+      // Use textBlockProgress for background transition (starts at 50% scroll)
+      const progress = textBlockProgress.value
+
+      if (progress === 0) {
+        // Pure pink gradient when no text block
+        return {
+          background: 'linear-gradient(135deg, #FBE5EE 0%, #FFF0F6 5%, #FBE5EE 54%, #FBE5EE 90%, #FFF0F6 100%)'
+        }
+      } else {
+        // Interpolate from pink tones to warm beige tones as text block appears
+        const r1 = 251, g1 = 229, b1 = 238 // #FBE5EE (pink)
+        const r2 = 230, g2 = 224, b2 = 221 // #E6E0DD (beige)
+
+        const r = Math.round(r1 + (r2 - r1) * progress)
+        const g = Math.round(g1 + (g2 - g1) * progress)
+        const b = Math.round(b1 + (b2 - b1) * progress)
+
+        return {
+          background: `rgb(${r}, ${g}, ${b})`
+        }
       }
     })
 
@@ -227,8 +337,6 @@ export default {
         targetScroll = 0
       } else if (sectionNumber === 2) {
         targetScroll = section2Start
-      } else if (sectionNumber === 3) {
-        targetScroll = section3Start
       }
 
       // Smooth scroll to target position
@@ -254,8 +362,8 @@ export default {
         duration: 0.8,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -12 * t)),
         smooth: true,
-        wheelMultiplier: 1.2,
-        lerp: 0.15,
+        wheelMultiplier: 1.8,
+        lerp: 0.25,
       })
 
       lenis.on('scroll', handleScroll)
@@ -328,13 +436,25 @@ export default {
       sections,
       totalHeight,
       section2Start,
-      section3Start,
       section1Progress,
 
+      // Getty-style overlapping transaction states
+      transaction1Active,
+      transaction2Active,
+      textBlockActive,
+      transaction1Progress,
+      transaction2Progress,
+      textBlockProgress,
+
       // Computed styles
-      topTitleStyle,
-      bottomTitleStyle,
-      mediaStyle,
+      transaction1TopTitleStyle,
+      transaction1BottomTitleStyle,
+      transaction1MediaStyle,
+      transaction2TopTitleStyle,
+      transaction2BottomTitleStyle,
+      transaction2MediaStyle,
+      textBlockStyle,
+      section1BackgroundStyle,
 
       // Methods
       goToSection

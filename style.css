@@ -11,6 +11,12 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Akke Text Light';
+    src: url('./akke/Akke-TextLight.otf') format('opentype');
+    font-display: swap;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -129,7 +135,7 @@ body {
 
 /* Section-specific backgrounds */
 .section1 {
-    background: linear-gradient(135deg, #FBE5EE 0%, #FFF0F6 5%, #FBE5EE 54%, #FBE5EE 90%, #FFF0F6 100%);
+    transition: background 0.8s ease;
 }
 
 .section2, .section3 {
@@ -175,6 +181,31 @@ body {
 }
 
 .section1.active, .section2.active, .section3.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Asset Transaction - Getty style visibility controls */
+.assetTransaction {
+    pointer-events: auto;
+    visibility: hidden;
+}
+
+.assetTransaction.active {
+    visibility: visible;
+}
+
+/* Text block within Section 1 - positioned via transforms */
+.section1 .textBlock {
+    position: absolute;
+    text-align: center;
+    pointer-events: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.section1 .textBlock.active {
     opacity: 1;
     visibility: visible;
 }
@@ -455,6 +486,7 @@ body {
 .title.top {
     top: 7lvh;
     transform-origin: center top;
+    font-family: 'Akke Text Light', sans-serif;
 }
 
 @media only screen and (max-width: 900px) {
@@ -466,6 +498,7 @@ body {
 .title.bottom {
     bottom: 7lvh;
     transform-origin: center bottom;
+    font-family: 'Akke Text Light', sans-serif;
 }
 
 .featuredAsset {
@@ -609,8 +642,6 @@ body {
 .section.active .textBlock {
     opacity: 1;
     visibility: visible;
-    background: rgba(255, 0, 0, 0.3);
-    border: 1px solid red;
 }
 
 .section.active .textBlock__inner {
