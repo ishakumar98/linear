@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "lenis": "^1.3.11",
+    "three": "^0.180.0",
     "vue": "^3.4.0"
   },
   "devDependencies": {

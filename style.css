@@ -121,16 +121,51 @@ body {
     }
 }
 
-/* Layout */
-.main {
-    min-height: 100vh;
+/* Getty-style Layout */
+.page {
     position: relative;
+    width: 100%;
 }
 
-.section {
+/* Section-specific backgrounds */
+.section1 {
+    background: linear-gradient(135deg, #FBE5EE 0%, #FFF0F6 5%, #FBE5EE 54%, #FBE5EE 90%, #FFF0F6 100%);
+}
+
+.section2, .section3 {
+    background: #f8f9fa;
+}
+
+.fillFixed {
+    position: fixed;
     height: 100vh;
+    left: 0;
+    top: 0;
     width: 100%;
-    position: relative;
+    z-index: 1;
+}
+
+.gl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 0;
+}
+
+.gl canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.section1, .section2, .section3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -139,7 +174,7 @@ body {
     transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 
-.section.active {
+.section1.active, .section2.active, .section3.active {
     opacity: 1;
     visibility: visible;
 }
@@ -419,7 +454,7 @@ body {
 
 .title.top {
     top: 7lvh;
-    transform-origin: center center;
+    transform-origin: center top;
 }
 
 @media only screen and (max-width: 900px) {
@@ -448,7 +483,7 @@ body {
     width: auto;
 }
 
-/* Transaction Title Styles - Exact Getty Implementation */
+/* Transaction Title Styles - Getty Implementation with Akke font */
 .transactionTitle {
     left: 0;
     line-height: .7;
@@ -460,8 +495,7 @@ body {
     -webkit-font-smoothing: antialiased;
     font-family: 'Akke', sans-serif;
     font-size: 23rem;
-    font-weight: 400;
-    letter-spacing: -.03em;
+    font-weight: 300;
     line-height: 1;
 }
 
@@ -558,4 +592,84 @@ body {
 
 .picture.useFade.loaded img {
     opacity: 1;
+}
+
+/* Getty-style text blocks */
+.textBlock {
+    opacity: 0;
+    pointer-events: auto;
+    position: absolute;
+    text-align: center;
+    visibility: hidden;
+    will-change: opacity, transform;
+    text-wrap-style: pretty;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.section.active .textBlock {
+    opacity: 1;
+    visibility: visible;
+    background: rgba(255, 0, 0, 0.3);
+    border: 1px solid red;
+}
+
+.section.active .textBlock__inner {
+    transform: scale(1);
+}
+
+.textBlock__inner {
+    display: inline-block;
+    position: relative;
+    transform: scale(.85);
+    will-change: transform;
+    font-family: 'Akke', sans-serif;
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    transition: transform 0.8s ease-out;
+}
+
+@media (max-width: 900px) {
+    .textBlock__inner {
+        font-size: 2rem;
+    }
+}
+
+.textBlock__inner .has-link {
+    white-space: nowrap;
+}
+
+@media only screen and (max-width: 900px) {
+    .textBlock__inner .has-link {
+        white-space: normal;
+    }
+
+    .textBlock__inner .has-link br {
+        display: none;
+    }
+}
+
+.textBlock__inner a {
+    text-decoration: underline;
+}
+
+.textBlock__inner svg {
+    height: 0;
+    transition: all .3s ease;
+    width: 0;
+}
+
+.textBlock__inner a:hover svg {
+    height: 2rem;
+    margin-left: .6rem;
+    width: 2rem;
+}
+
+@media only screen and (max-width: 900px) {
+    .textBlock__inner a:hover svg {
+        height: 1rem;
+        margin-left: .4rem;
+        width: 1rem;
+    }
 }
