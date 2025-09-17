@@ -64,7 +64,6 @@ body {
     font-size: 1.5rem;
     line-height: 1.4;
     color: #000;
-    background-color: #fff;
     overflow-x: hidden;
 }
 
@@ -412,15 +411,15 @@ body {
 .title {
     pointer-events: none;
     z-index: 10;
-}
-
-.title.top {
-    top: 7lvh;
-    transform-origin: center top;
     position: absolute;
     left: 0;
     width: 100vw;
     text-align: center;
+}
+
+.title.top {
+    top: 7lvh;
+    transform-origin: center center;
 }
 
 @media only screen and (max-width: 900px) {
@@ -432,10 +431,6 @@ body {
 .title.bottom {
     bottom: 7lvh;
     transform-origin: center bottom;
-    position: absolute;
-    left: 0;
-    width: 100vw;
-    text-align: center;
 }
 
 .featuredAsset {
@@ -466,9 +461,7 @@ body {
     font-family: 'Akke', sans-serif;
     font-size: 23rem;
     font-weight: 400;
-    letter-spacing: -.02em;
     letter-spacing: -.03em;
-    line-height: 1.12;
     line-height: 1;
 }
 

@@ -117,7 +117,7 @@ export default {
       { r: 255, g: 255, b: 255 }  // Section 3: #FFFFFF (white)
     ]
 
-    // Three-phase animation: scaling first, then gentle container movement, then section exit
+    // Getty-style: Continuous slow upward movement + faster scaling
     const topTitleStyle = computed(() => {
       const progress = scrollProgress.value
 
@@ -129,24 +129,34 @@ export default {
         }
       }
 
-      if (progress <= 0.6) {
-        // Phase 1: Scale animation only (0 to 0.6 progress) - text scaling
-        const scaleProgress = progress / 0.6 // Normalize to 0-1
-        const scale = Math.max(0.25, 1 - (scaleProgress * 0.75)) // Scale from 1 to min 0.25
-
-        return {
-          transform: `translate(0px, 0lvh) scale(${scale}, ${scale})`,
-          opacity: 1
-        }
+      // Fixed calculation to prevent position jumps
+      let translateY
+      if (progress <= 0.5) {
+        // Phase 1: Slow movement during scaling (0-50%)
+        translateY = -(progress * 20) // 10vh at 50% progress
+      } else if (progress <= 0.7) {
+        // Transition zone: Smooth acceleration (50-70%)
+        const transitionProgress = (progress - 0.5) / 0.2 // 0 to 1 over 20%
+        const easedTransition = transitionProgress * transitionProgress // Smooth easing
+        translateY = -10 - (easedTransition * 20) // Smooth from 10vh to 30vh
       } else {
-        // Phase 2: Maintain min scale and translate out completely (0.6 to 1 progress)
-        const translateProgress = (progress - 0.6) / 0.4 // Normalize to 0-1
-        const translateY = -(translateProgress * 120) // Stronger movement - fully exit screen
+        // Phase 2: Faster movement for exit (70-100%)
+        const exitProgress = (progress - 0.7) / 0.3 // 0 to 1 over remaining 30%
+        translateY = -30 - (exitProgress * 70) // From 30vh to 100vh total
+      }
 
-        return {
-          transform: `translate(0px, ${translateY}lvh) scale(0.25, 0.25)`,
-          opacity: Math.max(0, 1 - (translateProgress * 2)) // Fade out as it exits
-        }
+      // Scaling completes at 60% with smooth transition
+      let scale
+      if (progress <= 0.6) {
+        const scaleProgress = progress / 0.6 // 0 to 1 over first 60%
+        scale = Math.max(0.25, 1 - (scaleProgress * 0.75)) // Scale from 1 to 0.25
+      } else {
+        scale = 0.25 // Hold at minimum scale after 60%
+      }
+
+      return {
+        transform: `translate(0px, ${translateY}lvh) scale(${scale}, ${scale})`,
+        opacity: 1
       }
     })
 
@@ -161,24 +171,34 @@ export default {
         }
       }
 
-      if (progress <= 0.6) {
-        // Phase 1: Scale animation only (0 to 0.6 progress) - text scaling
-        const scaleProgress = progress / 0.6 // Normalize to 0-1
-        const scale = 0.25 + (scaleProgress * 0.75) // Scale from 0.25 to 1
-
-        return {
-          transform: `translate(0px, 0lvh) scale(${scale}, ${scale})`,
-          opacity: 1
-        }
+      // Two-phase movement with smooth transition around 60%
+      let translateY
+      if (progress <= 0.5) {
+        // Phase 1: Slow movement during scaling (0-50%)
+        translateY = -(progress * 20) // 20vh over first 50%
+      } else if (progress <= 0.7) {
+        // Transition zone: Smooth acceleration (50-70%)
+        const transitionProgress = (progress - 0.5) / 0.2 // 0 to 1 over 20%
+        const easedTransition = transitionProgress * transitionProgress // Smooth easing
+        translateY = -20 - (easedTransition * 20) // Smooth transition from 20vh to 40vh
       } else {
-        // Phase 2: Maintain full scale and translate out completely (0.6 to 1 progress)
-        const translateProgress = (progress - 0.6) / 0.4 // Normalize to 0-1
-        const translateY = -(translateProgress * 120) // Stronger movement - fully exit screen
+        // Phase 2: Faster movement for exit (70-100%)
+        const exitProgress = (progress - 0.7) / 0.3 // 0 to 1 over remaining 30%
+        translateY = -40 - (exitProgress * 60) // Additional 60vh for exit
+      }
 
-        return {
-          transform: `translate(0px, ${translateY}lvh) scale(1, 1)`,
-          opacity: Math.max(0, 1 - (translateProgress * 2)) // Fade out as it exits
-        }
+      // Scaling completes at 60% with smooth transition
+      let scale
+      if (progress <= 0.6) {
+        const scaleProgress = progress / 0.6 // 0 to 1 over first 60%
+        scale = 0.25 + (scaleProgress * 0.75) // Scale from 0.25 to 1
+      } else {
+        scale = 1 // Hold at maximum scale after 60%
+      }
+
+      return {
+        transform: `translate(0px, ${translateY}lvh) scale(${scale}, ${scale})`,
+        opacity: 1
       }
     })
 
@@ -193,21 +213,25 @@ export default {
         }
       }
 
-      if (progress <= 0.6) {
-        // Phase 1: Image stays put during text scaling
-        return {
-          transform: `translate(0px, 0lvh)`,
-          opacity: 1
-        }
+      // Image follows same smooth movement pattern but slower
+      let translateY
+      if (progress <= 0.5) {
+        // Phase 1: Slow movement during scaling (0-50%)
+        translateY = -(progress * 15) // 15vh over first 50% (slower than text)
+      } else if (progress <= 0.7) {
+        // Transition zone: Smooth acceleration (50-70%)
+        const transitionProgress = (progress - 0.5) / 0.2 // 0 to 1 over 20%
+        const easedTransition = transitionProgress * transitionProgress // Smooth easing
+        translateY = -15 - (easedTransition * 15) // Smooth transition from 15vh to 30vh
       } else {
-        // Phase 2: Strong upward movement with the titles (0.6 to 1 progress)
-        const translateProgress = (progress - 0.6) / 0.4 // Normalize to 0-1
-        const translateY = -(translateProgress * 100) // Strong movement - fully exit screen
+        // Phase 2: Faster movement for exit (70-100%)
+        const exitProgress = (progress - 0.7) / 0.3 // 0 to 1 over remaining 30%
+        translateY = -30 - (exitProgress * 40) // Additional 40vh for exit (total 70vh)
+      }
 
-        return {
-          transform: `translate(0px, ${translateY}lvh)`,
-          opacity: Math.max(0, 1 - (translateProgress * 2)) // Fade out as it exits
-        }
+      return {
+        transform: `translate(0px, ${translateY}lvh)`,
+        opacity: 1
       }
     })
 
@@ -265,8 +289,8 @@ export default {
 
     const handleLenisScroll = (e) => {
       if (currentSection.value === 1) {
-        // Handle scroll within section 1 for title animations - very slow progression like Getty
-        const delta = e.velocity > 0 ? 0.0005 : -0.0005 // Much smaller increments - requires lots of scrolling
+        // Handle scroll within section 1 for title animations - ultra slow upward movement
+        const delta = e.velocity > 0 ? 0.000025 : -0.000025 // 4x slower upward movement
         const newProgress = Math.max(0, Math.min(1, scrollProgress.value + delta))
 
         if (newProgress !== scrollProgress.value) {
@@ -322,7 +346,7 @@ export default {
 
       if (currentSection.value === 1) {
         // Handle scroll within section 1 for title animations - much faster speed
-        const delta = e.deltaY > 0 ? 0.003 : -0.003 // Doubled again from 0.0015 to 0.003 (4x faster than original)
+        const delta = e.deltaY > 0 ? 0.003 : -0.003 // Restored to previous speed
         const newProgress = Math.max(0, Math.min(1, scrollProgress.value + delta))
 
         if (newProgress !== scrollProgress.value) {
