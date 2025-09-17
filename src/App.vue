@@ -129,29 +129,16 @@ export default {
         }
       }
 
-      // Fixed calculation to prevent position jumps
-      let translateY
-      if (progress <= 0.5) {
-        // Phase 1: Slow movement during scaling (0-50%)
-        translateY = -(progress * 20) // 10vh at 50% progress
-      } else if (progress <= 0.7) {
-        // Transition zone: Smooth acceleration (50-70%)
-        const transitionProgress = (progress - 0.5) / 0.2 // 0 to 1 over 20%
-        const easedTransition = transitionProgress * transitionProgress // Smooth easing
-        translateY = -10 - (easedTransition * 20) // Smooth from 10vh to 30vh
-      } else {
-        // Phase 2: Faster movement for exit (70-100%)
-        const exitProgress = (progress - 0.7) / 0.3 // 0 to 1 over remaining 30%
-        translateY = -30 - (exitProgress * 70) // From 30vh to 100vh total
-      }
+      // Continuous smooth movement - no position jumps
+      const translateY = -(progress * 80) // Simple continuous movement to 80vh
 
-      // Scaling completes at 60% with smooth transition
+      // Very fast scaling - completes at 20% progress
       let scale
-      if (progress <= 0.6) {
-        const scaleProgress = progress / 0.6 // 0 to 1 over first 60%
+      if (progress <= 0.2) {
+        const scaleProgress = progress / 0.2 // 0 to 1 over first 20%
         scale = Math.max(0.25, 1 - (scaleProgress * 0.75)) // Scale from 1 to 0.25
       } else {
-        scale = 0.25 // Hold at minimum scale after 60%
+        scale = 0.25 // Hold at minimum scale after 20%
       }
 
       return {
@@ -171,29 +158,16 @@ export default {
         }
       }
 
-      // Two-phase movement with smooth transition around 60%
-      let translateY
-      if (progress <= 0.5) {
-        // Phase 1: Slow movement during scaling (0-50%)
-        translateY = -(progress * 20) // 20vh over first 50%
-      } else if (progress <= 0.7) {
-        // Transition zone: Smooth acceleration (50-70%)
-        const transitionProgress = (progress - 0.5) / 0.2 // 0 to 1 over 20%
-        const easedTransition = transitionProgress * transitionProgress // Smooth easing
-        translateY = -20 - (easedTransition * 20) // Smooth transition from 20vh to 40vh
-      } else {
-        // Phase 2: Faster movement for exit (70-100%)
-        const exitProgress = (progress - 0.7) / 0.3 // 0 to 1 over remaining 30%
-        translateY = -40 - (exitProgress * 60) // Additional 60vh for exit
-      }
+      // Continuous smooth movement - no position jumps
+      const translateY = -(progress * 80) // Simple continuous movement to 80vh
 
-      // Scaling completes at 60% with smooth transition
+      // Very fast scaling - completes at 20% progress
       let scale
-      if (progress <= 0.6) {
-        const scaleProgress = progress / 0.6 // 0 to 1 over first 60%
+      if (progress <= 0.2) {
+        const scaleProgress = progress / 0.2 // 0 to 1 over first 20%
         scale = 0.25 + (scaleProgress * 0.75) // Scale from 0.25 to 1
       } else {
-        scale = 1 // Hold at maximum scale after 60%
+        scale = 1 // Hold at maximum scale after 20%
       }
 
       return {
@@ -213,21 +187,8 @@ export default {
         }
       }
 
-      // Image follows same smooth movement pattern but slower
-      let translateY
-      if (progress <= 0.5) {
-        // Phase 1: Slow movement during scaling (0-50%)
-        translateY = -(progress * 15) // 15vh over first 50% (slower than text)
-      } else if (progress <= 0.7) {
-        // Transition zone: Smooth acceleration (50-70%)
-        const transitionProgress = (progress - 0.5) / 0.2 // 0 to 1 over 20%
-        const easedTransition = transitionProgress * transitionProgress // Smooth easing
-        translateY = -15 - (easedTransition * 15) // Smooth transition from 15vh to 30vh
-      } else {
-        // Phase 2: Faster movement for exit (70-100%)
-        const exitProgress = (progress - 0.7) / 0.3 // 0 to 1 over remaining 30%
-        translateY = -30 - (exitProgress * 40) // Additional 40vh for exit (total 70vh)
-      }
+      // Continuous smooth movement - slower than text for parallax
+      const translateY = -(progress * 60) // Simple continuous movement to 60vh
 
       return {
         transform: `translate(0px, ${translateY}lvh)`,
@@ -345,8 +306,18 @@ export default {
       e.preventDefault() // Prevent default page scroll
 
       if (currentSection.value === 1) {
-        // Handle scroll within section 1 for title animations - much faster speed
-        const delta = e.deltaY > 0 ? 0.003 : -0.003 // Restored to previous speed
+        // Three-phase scroll speed for optimal experience
+        let delta
+        if (scrollProgress.value >= 0.7) {
+          // Faster scroll speed after 70% to exit quickly
+          delta = e.deltaY > 0 ? 0.006 : -0.006
+        } else if (scrollProgress.value >= 0.2) {
+          // Medium scroll speed for 20-70% (movement phase)
+          delta = e.deltaY > 0 ? 0.0032 : -0.0032
+        } else {
+          // Moderate scroll speed for 0-20% (scaling phase)
+          delta = e.deltaY > 0 ? 0.0016 : -0.0016
+        }
         const newProgress = Math.max(0, Math.min(1, scrollProgress.value + delta))
 
         if (newProgress !== scrollProgress.value) {
