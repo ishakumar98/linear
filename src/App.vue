@@ -901,12 +901,12 @@ export default {
     const section1BackgroundStyle = computed(() => {
       const textBlock1Progress = textBlockProgress.value
       const textBlock2ProgressValue = textBlock2Progress.value
+      const overallScrollProgress = section1Progress.value
 
-      // Calculate overall progress through the text blocks
-      const hasSeenTextBlock1 = textBlock1Progress > 0 || textBlock2ProgressValue > 0
-
-      if (!hasSeenTextBlock1) {
-        // Pure pink gradient when no text blocks have appeared yet
+      // Only show pink gradient at the very beginning (before 30% scroll)
+      // This prevents pink from reappearing during gaps between text blocks
+      if (overallScrollProgress < 0.30) {
+        // Pure pink gradient when still in initial transaction phase
         return {
           background: 'linear-gradient(135deg, #FBE5EE 0%, #FFF0F6 5%, #FBE5EE 54%, #FBE5EE 90%, #FFF0F6 100%)'
         }
@@ -922,12 +922,18 @@ export default {
         return {
           background: `rgb(${r}, ${g}, ${b})`
         }
+      } else if (overallScrollProgress >= 0.55 && textBlock2ProgressValue === 0) {
+        // Between text block 1 and 2 (55% - 65%), or after text block 2 ends - stay blue
+        return {
+          background: 'rgb(229, 239, 251)' // #E5EFFB (blue)
+        }
       } else {
-        // First text block active or completed - show blue
+        // First text block active or transition from pink to blue
         const r1 = 251, g1 = 229, b1 = 238 // #FBE5EE (pink)
         const r2 = 229, g2 = 239, b2 = 251 // #E5EFFB (blue)
 
-        const progress = Math.max(textBlock1Progress, textBlock1Progress > 0 ? 1 : 0)
+        // Use either text block progress or overall scroll progress for transition
+        const progress = textBlock1Progress > 0 ? textBlock1Progress : Math.min(1, (overallScrollProgress - 0.30) / 0.25)
         const r = Math.round(r1 + (r2 - r1) * progress)
         const g = Math.round(g1 + (g2 - g1) * progress)
         const b = Math.round(b1 + (b2 - b1) * progress)
