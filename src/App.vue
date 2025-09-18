@@ -24,14 +24,6 @@
       Section: {{ currentSection }} | Scroll: {{ Math.round(scrollY) }}px | Progress: {{ Math.round(section1Progress * 100) }}% | Dir: {{ scrollDirection }}
     </div>
 
-    <!-- Flower Debug Info -->
-    <div style="position: fixed; top: 10px; left: 10px; background: blue; color: white; padding: 10px; z-index: 10000; font-size: 12px; max-width: 300px;">
-      <div>Container: {{ flowerDebugInfo.containerSize }}</div>
-      <div>Expected Center: {{ flowerDebugInfo.expectedCenter }}</div>
-      <div>CSS: {{ flowerDebugInfo.cssPosition }}</div>
-      <div>Transform: {{ flowerDebugInfo.transform }}</div>
-      <div>{{ flowerDebugInfo.note }}</div>
-    </div>
 
     <!-- Three.js Canvas -->
     <div class="gl">
@@ -451,29 +443,13 @@ export default {
       const rotation = progress * 360 // Full rotation during scroll
       const scale = 0.5 + (progress * 0.5) // Scale from 0.5 to 1.0
 
-      // Include centering translation since JS transform overrides CSS transform
+      // Position flower center at viewport center (no translate needed)
       return {
-        transform: `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`,
+        transform: `rotate(${rotation}deg) scale(${scale})`,
         transition: progress === 0 ? 'none' : 'transform 0.1s ease-out'
       }
     })
 
-    // Debug: Flower position info
-    const flowerDebugInfo = computed(() => {
-      const containerSize = 12 // 12em
-      const expectedCenterX = window.innerWidth / 2
-      const expectedCenterY = window.innerHeight / 2
-      const actualPositionX = expectedCenterX // 50% of viewport
-      const actualPositionY = expectedCenterY // 50% of viewport
-
-      return {
-        containerSize: `${containerSize}em`,
-        expectedCenter: `(${expectedCenterX}px, ${expectedCenterY}px)`,
-        cssPosition: 'top: 50%, left: 50%',
-        transform: 'translate(-50%, -50%)',
-        note: 'Left edge at center suggests transform not working'
-      }
-    })
 
     // Navigation
     const goToSection = (sectionNumber) => {
@@ -606,7 +582,6 @@ export default {
       imageBlockSecondImageStyle,
       section1BackgroundStyle,
       flowerLogoStyle,
-      flowerDebugInfo,
 
       // Methods
       goToSection

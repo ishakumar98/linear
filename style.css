@@ -800,9 +800,8 @@ body {
     height: 12em; /* 4x larger */
     z-index: 10;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: calc(50% - 6em); /* Center minus half height */
+    left: calc(50% - 6em); /* Center minus half width */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -861,10 +860,33 @@ a.logo:hover {
     height: 50%;
     top: 25%;
     left: 25%;
-    background: #FECCF1;
+    background-color: #FE4D9F; /* Petal color base layer shows through slashes */
     position: absolute;
     border-radius: 100%;
-    pointer-events: none
+    pointer-events: none;
+    transform: translateZ(0); /* Force hardware acceleration for consistent rendering */
+}
+
+.flower:before {
+    content: "";
+    display: inline-block;
+    width: 50.5%;
+    height: 50.5%;
+    top: 24.75%;
+    left: 24.75%;
+    background: url('/logo-light.svg?v=1') center/100% no-repeat;
+    background-color: transparent; /* Start with no background */
+    position: absolute;
+    border-radius: 100%;
+    pointer-events: none;
+    z-index: 1;
+    transform: translateZ(0); /* Force hardware acceleration for better pixel precision */
+    animation: logoAppear 0.5s ease-out forwards;
+}
+
+.flower[intro]:before {
+    animation: logoAppear 0.5s ease-out forwards,
+               backgroundFadeIn 0.5s ease-out 2s forwards; /* Background appears after petals */
 }
 
 .flower .top,.flower .bottom {
@@ -925,8 +947,6 @@ a.logo:hover {
 }
 
 .flower-logo {
-    top: 0.25em;
-    left: calc(50% - 1.75em);
     z-index: 20;
     animation: scaleUp 1s;
     animation-fill-mode: forwards
@@ -1037,5 +1057,25 @@ a.logo:hover {
     }
     100% {
         transform: translate(0%, 0%)
+    }
+}
+
+@keyframes logoAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes backgroundFadeIn {
+    0% {
+        background-color: transparent;
+    }
+    100% {
+        background-color: #FE4D9F;
     }
 }
