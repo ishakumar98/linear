@@ -216,6 +216,20 @@ body {
     visibility: visible;
 }
 
+/* Section 2 Text Blocks */
+.section2 .textBlock {
+    position: absolute;
+    text-align: center;
+    pointer-events: auto;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.section2 .textBlock.active {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* Navigation */
 .nav {
     position: fixed;
@@ -545,6 +559,28 @@ body {
     transform-origin: inherit;
     white-space: nowrap;
     will-change: transform, opacity;
+    opacity: 0;
+}
+
+/* Top title (Linear) fades in first */
+.transactionTitle.top .transactionTitle__inner {
+    animation: fadeInTitle 0.8s ease-out 2.5s forwards;
+}
+
+/* Bottom title (I'm Isha) fades in after Linear */
+.transactionTitle.bottom .transactionTitle__inner {
+    animation: fadeInTitle 0.8s ease-out 3.5s forwards;
+}
+
+@keyframes fadeInTitle {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media only screen and (min-width: 901px) and (min-aspect-ratio: 8106479329266893/4503599627370496) {
@@ -697,7 +733,15 @@ body {
 }
 
 .textBlock__inner a {
-    text-decoration: underline;
+    text-decoration: none;
+    color: #6279B1;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.textBlock__inner a:hover {
+    opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .textBlock__inner svg {
@@ -1082,6 +1126,7 @@ a.logo:hover {
 
 /* PNG Images - Various screen positions */
 .png-image {
+    position: relative;
     z-index: 3;
     will-change: transform, opacity;
 }
@@ -1236,7 +1281,7 @@ a.textBlock__icon:hover .icon-linkedin {
     width: auto;
     height: auto;
     object-fit: contain;
-    border-radius: 0;
+    border-radius: 0.8rem;
     filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3));
     display: block;
     transition: filter 0.3s ease, transform 0.5s ease;
@@ -1289,4 +1334,68 @@ a.textBlock__icon:hover .icon-linkedin {
     font-size: 1.25rem;
     color: rgba(0, 0, 0, 0.6);
     line-height: 1;
+}
+
+/* Project Popup */
+.project-popup {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0.5rem;
+    z-index: 1000;
+    pointer-events: auto;
+    animation: popupFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes popupFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+.project-popup__title {
+    font-family: 'Tumla', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    color: rgba(0, 0, 0, 0.8);
+    margin: 0 0 0.25rem 0;
+    text-align: center;
+}
+
+.project-popup__description {
+    font-family: 'Tumla', sans-serif;
+    font-weight: 300;
+    font-size: 1.1rem;
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 1.4;
+    margin: 0;
+    text-align: center;
+}
+
+/* Specific popup positioning adjustments */
+.png-image-2 .project-popup,
+.png-image-4 .project-popup {
+    margin-top: 1rem;
+}
+
+.png-image-3 .project-popup,
+.png-image-5 .project-popup {
+    margin-top: 0.1rem;
+}
+
+/* Add cursor pointer to clickable images */
+.png-image {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.png-image:hover {
+    transform: scale(1.02);
 }

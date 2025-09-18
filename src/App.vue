@@ -20,7 +20,6 @@
     </nav>
 
 
-
     <!-- Three.js Canvas -->
     <div class="gl">
       <canvas ref="threeCanvas"></canvas>
@@ -41,7 +40,7 @@
         <!-- Transaction 1: Hello Linear / I'm Isha -->
         <div class="assetTransaction" :class="{ active: transaction1Active }">
           <h1 class="transactionTitle title top" :style="transaction1TopTitleStyle">
-            <span class="transactionTitle__inner">Linear</span>
+            <span class="transactionTitle__inner">Hello Linear</span>
           </h1>
           <h1 class="transactionTitle title bottom" :style="transaction1BottomTitleStyle">
             <span class="transactionTitle__inner">I'm Isha</span>
@@ -66,14 +65,14 @@
         <!-- Text Block 1 (appears during scroll overlap) -->
         <div class="textBlock paragraph textBodyM" :class="{ active: textBlockActive }" style="left: 50%; top: 50%; transform: translate(-50%, -50%); width: 65rem;">
           <p class="textBlock__inner" :style="textBlockInnerStyle">
-            I'm currently a senior product designer at Slack. Currently, I lead design for huddles. Before that, I was at Stanford University, where I got my B.S. and M.S. in Computer Science, with a minor in Art History.
+            I'm currently a senior product designer at <a href="https://slack.com/" target="_blank" rel="noopener noreferrer">Slack</a>. Currently, I lead design for <a href="https://slack.com/intl/en-gb/features/huddles" target="_blank" rel="noopener noreferrer">huddles</a>. Before that, I got my M.S. and B.S. in Computer Science from Stanford University.
           </p>
         </div>
 
         <!-- Text Block 2 (appears after first text block) -->
         <div class="textBlock paragraph textBodyM" :class="{ active: textBlock2Active }" style="left: 50%; top: 50%; transform: translate(-50%, -50%); width: 65rem;">
           <p class="textBlock__inner" :style="textBlock2InnerStyle">
-            I am drawn to things that feel both natural and surprising, and I hope to create work that inspires that same feeling in others. I am so excited to be here. Thank you for sharing your time, and your workplace.
+            I am drawn to things that feel both natural and surprising, and hope to create that dynamic in my work. Thank you for sharing your time, and your workplace, with me. I'm so excited to be here.
           </p>
         </div>
 
@@ -82,34 +81,58 @@
           <!-- Image Block Text -->
           <div class="textBlock paragraph textBodyM" :class="{ active: imageBlockTextActive }" :style="imageBlockTextContainerStyle">
             <div class="textBlock__inner" :style="imageBlockTextInnerStyle">
-              <p>A few of my favorite things</p>
-              <p class="textBlock__subtitle">Projects that brought me joy</p>
+              <p>Some tidbits about me...</p>
             </div>
           </div>
 
           <!-- PNG Image 1 - Top Left -->
-          <div class="png-image png-image-1" :style="pngImage1Style">
+          <div class="png-image png-image-1" :style="pngImage1Style" @click="toggleProjectPopup('Ballymaloe')">
             <img src="/images/portfolio/Ballymaloe.png" alt="Ballymaloe project" class="png-img">
+            <!-- Individual popup for this image -->
+            <div v-if="activePopups.Ballymaloe" class="project-popup">
+              <h3 class="project-popup__title">Ballymaloe</h3>
+              <p class="project-popup__description">I love Ireland, I love potatoes, and I love cooking. Ballymaloe has all three, including a culinary school I plan to attend in 2027.</p>
+            </div>
           </div>
 
           <!-- PNG Image 2 - Top Right -->
-          <div class="png-image png-image-2" :style="pngImage2Style">
+          <div class="png-image png-image-2" :style="pngImage2Style" @click="toggleProjectPopup('Bridesmaids')">
             <img src="/images/portfolio/Bridesmaids.jpg" alt="Bridesmaids project" class="png-img">
+            <!-- Individual popup for this image -->
+            <div v-if="activePopups.Bridesmaids" class="project-popup">
+              <h3 class="project-popup__title">Bridesmaids</h3>
+              <p class="project-popup__description">Bridesmaids is my favorite movie of all time. I think I can recite almost the entire script.</p>
+            </div>
           </div>
 
           <!-- PNG Image 3 - Center Left -->
-          <div class="png-image png-image-3" :style="pngImage3Style">
+          <div class="png-image png-image-3" :style="pngImage3Style" @click="toggleProjectPopup('Warmies')">
             <img src="/images/portfolio/Warmies.png" alt="Warmies project" class="png-img">
+            <!-- Individual popup for this image -->
+            <div v-if="activePopups.Warmies" class="project-popup">
+              <h3 class="project-popup__title">Warmies</h3>
+              <p class="project-popup__description">I have started a Warmies cult. All my loved ones have them now. They smell like lavender, and can be used as a heating pad or cool compress.</p>
+            </div>
           </div>
 
           <!-- PNG Image 4 - Bottom Right -->
-          <div class="png-image png-image-4" :style="pngImage4Style">
+          <div class="png-image png-image-4" :style="pngImage4Style" @click="toggleProjectPopup('Passport')">
             <img src="/images/portfolio/Passport.png" alt="Passport project" class="png-img">
+            <!-- Individual popup for this image -->
+            <div v-if="activePopups.Passport" class="project-popup">
+              <h3 class="project-popup__title">British</h3>
+              <p class="project-popup__description">That's right, everyone, I'm British. Regrettably, I don't have an accent, because we moved when I was little. But, I fake one when I need to increase my credibility.</p>
+            </div>
           </div>
 
           <!-- PNG Image 5 - Bottom Center -->
-          <div class="png-image png-image-5" :style="pngImage5Style">
+          <div class="png-image png-image-5" :style="pngImage5Style" @click="toggleProjectPopup('Lost')">
             <img src="/images/portfolio/Lost.png" alt="Lost project" class="png-img">
+            <!-- Individual popup for this image -->
+            <div v-if="activePopups.Lost" class="project-popup">
+              <h3 class="project-popup__title">Lost</h3>
+              <p class="project-popup__description">Currently watching this for the first time — oscar worthy island drama.</p>
+            </div>
           </div>
         </div>
 
@@ -117,6 +140,13 @@
 
       <!-- Section 2: Time Machine Image Stack -->
       <div class="section2" :class="{ active: currentSection === 2 }">
+        <!-- Section 2 Text Block -->
+        <div class="textBlock paragraph textBodyM" :class="{ active: section2TextActive }" style="left: 50%; top: 50%; transform: translate(-50%, -50%); width: 65rem;">
+          <p class="textBlock__inner" :style="section2TextInnerStyle">
+            Here's a snapshot of my work.
+          </p>
+        </div>
+
         <div class="timeMachine" :style="timeMachineContainerStyle">
           <!-- Time Machine Image Stack -->
           <div class="timeMachine__stack">
@@ -238,6 +268,7 @@ export default {
 
     // Section 2 tracking
     const section2Progress = ref(0)
+    const section2TextProgress = ref(0)
 
     // Active states for overlapping transactions - transaction1 starts active
     const transaction1Active = ref(true)
@@ -245,6 +276,31 @@ export default {
     const textBlock2Active = ref(false)
     const imageBlockActive = ref(false)
     const imageBlockTextActive = ref(false)
+
+    // Section 2 text block
+    const section2TextActive = ref(false)
+
+    // Individual popup states for each image
+    const activePopups = ref({
+      Ballymaloe: false,
+      Bridesmaids: false,
+      Warmies: false,
+      Passport: false,
+      Lost: false
+    })
+
+    // Toggle individual popup function
+    const toggleProjectPopup = (projectName) => {
+      // Close all other popups first
+      Object.keys(activePopups.value).forEach(key => {
+        if (key !== projectName) {
+          activePopups.value[key] = false
+        }
+      })
+
+      // Toggle the clicked popup
+      activePopups.value[projectName] = !activePopups.value[projectName]
+    }
 
     // Three.js setup
     let scene, camera, renderer
@@ -354,6 +410,16 @@ export default {
         currentSection.value = 2
         const rawProgress = (scrollY.value - section2Start) / section2Height
         section2Progress.value = Math.max(0, rawProgress) // Allow progress > 1.0
+
+        // Section 2 text block: appears at the start of section 2
+        if (section2Progress.value >= 0 && section2Progress.value <= 0.3) {
+          section2TextActive.value = true
+          // Calculate progress within the active range (0-30%)
+          section2TextProgress.value = Math.min(1, section2Progress.value / 0.3)
+        } else {
+          section2TextActive.value = false
+          section2TextProgress.value = 0
+        }
 
         // For display: show 100% when we've reached the point where text should be visible
         if (section2Progress.value >= 0.8) {
@@ -575,6 +641,23 @@ export default {
       }
     })
 
+    // Section 2 Text Block style - matches section 1 text blocks exactly
+    const section2TextInnerStyle = computed(() => {
+      const progress = section2TextProgress.value
+
+      if (progress === 0) {
+        return {
+          transform: 'scale(0.85)'
+        }
+      } else {
+        // Uses translate(0px, 0px) when active, with scale animation
+        const scale = 0.85 + (progress * 0.15) // Scale from 0.85 to 1.0
+        return {
+          transform: `translate(0px, 0px) scale(${scale})`
+        }
+      }
+    })
+
     // Time Machine Container Style
     const timeMachineContainerStyle = computed(() => {
       return {
@@ -598,9 +681,9 @@ export default {
       const progress = section2Progress.value
       const totalImages = 6
 
-      if (progress < 0.2) {
-        // Phase 1: Scale in with fixed stacking positions
-        const scalePhase = progress / 0.2
+      if (progress < 0.4) {
+        // Phase 1: Scale in with fixed stacking positions - starts at 40% to give text time
+        const scalePhase = Math.max(0, (progress - 0.3) / 0.1) // Only start scaling at 30% progress
         const opacity = scalePhase
 
         // Time Machine stacking: each image 15% smaller and positioned higher
@@ -622,7 +705,7 @@ export default {
         }
       } else {
         // Phase 2: Cycle through the stack - determine which image is currently active
-        const tunnelPhase = (progress - 0.2) / 0.6 // Use 0.6 instead of 0.8 to reach end sooner
+        const tunnelPhase = (progress - 0.4) / 0.4 // Starts at 40% now, with shorter cycle time
         const rawActiveIndex = tunnelPhase * totalImages // 0 to 5 so we can scroll past the last image
         const activeImageIndex = Math.round(rawActiveIndex) // Which image should be active (0-5, where 5 means past all images)
 
@@ -679,7 +762,7 @@ export default {
     // Time Machine Title Styles - only show title for the front image
     const getTimeMachineTitleStyle = (itemIndex) => {
       const progress = section2Progress.value
-      if (progress < 0.2) {
+      if (progress < 0.4) {
         // No titles during scale-in phase
         return {
           opacity: 0,
@@ -687,7 +770,7 @@ export default {
         }
       } else {
         // Phase 2: Show title only for active (front) image
-        const tunnelPhase = (progress - 0.2) / 0.6
+        const tunnelPhase = (progress - 0.4) / 0.4
         const totalImages = 6
         const rawActiveIndex = tunnelPhase * totalImages
         const activeImageIndex = Math.round(rawActiveIndex)
@@ -712,7 +795,7 @@ export default {
     const thankYouTextInnerStyle = computed(() => {
       const progress = section2Progress.value
 
-      if (progress < 0.2) {
+      if (progress < 0.4) {
         // Not visible during scale-in phase
         return {
           transform: 'scale(0.85)',
@@ -721,7 +804,7 @@ export default {
         }
       }
 
-      const tunnelPhase = (progress - 0.2) / 0.6 // Match Time Machine logic
+      const tunnelPhase = (progress - 0.4) / 0.4 // Match Time Machine logic
       const totalImages = 6
       const rawActiveIndex = tunnelPhase * totalImages // 0 to 5 to match the Time Machine logic
 
@@ -763,7 +846,7 @@ export default {
         return {
           position: 'absolute',
           top: '8%',
-          left: '10%',
+          left: '15%',
           transform: 'scale(0)',
           opacity: 0
         }
@@ -777,7 +860,7 @@ export default {
         return {
           position: 'absolute',
           top: '8%',
-          left: '10%',
+          left: '15%',
           transform: `scale(${scale})`,
           opacity: opacity,
           transition: 'all 0.3s ease-out'
@@ -820,7 +903,7 @@ export default {
         return {
           position: 'absolute',
           top: '45%',
-          left: '2%',
+          left: '5%',
           transform: 'scale(0)',
           opacity: 0
         }
@@ -833,7 +916,7 @@ export default {
         return {
           position: 'absolute',
           top: '45%',
-          left: '2%',
+          left: '5%',
           transform: `scale(${scale})`,
           opacity: opacity,
           transition: 'all 0.5s ease-out'
@@ -875,7 +958,7 @@ export default {
       if (progress === 0) {
         return {
           position: 'absolute',
-          bottom: '10%',
+          bottom: '12%',
           left: '50%',
           transform: 'translateX(-50%) scale(0)',
           opacity: 0
@@ -888,7 +971,7 @@ export default {
 
         return {
           position: 'absolute',
-          bottom: '10%',
+          bottom: '12%',
           left: '50%',
           transform: `translateX(-50%) scale(${scale})`,
           opacity: opacity,
@@ -1090,11 +1173,13 @@ export default {
       textBlock2Active,
       imageBlockActive,
       imageBlockTextActive,
+      section2TextActive,
       transaction1Progress,
       textBlockProgress,
       textBlock2Progress,
       imageBlockProgress,
       section2Progress,
+      section2TextProgress,
 
       // Computed styles
       transaction1TopTitleStyle,
@@ -1114,6 +1199,7 @@ export default {
       pngImage4Style,
       pngImage5Style,
       section1BackgroundStyle,
+      section2TextInnerStyle,
       flowerLogoStyle,
       timeMachineContainerStyle,
       timeMachineItem1Style,
@@ -1129,6 +1215,10 @@ export default {
       timeMachineTitle5Style,
       timeMachineTitle6Style,
       thankYouTextInnerStyle,
+
+      // Project popup
+      activePopups,
+      toggleProjectPopup,
 
       // Methods
       goToSection
