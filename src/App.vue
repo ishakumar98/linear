@@ -19,10 +19,6 @@
       </div>
     </nav>
 
-    <!-- Debug Info -->
-    <div style="position: fixed; top: 10px; right: 10px; background: green; color: white; padding: 10px; z-index: 10000; font-size: 16px;">
-      Section: {{ currentSection }} | Scroll: {{ Math.round(scrollY) }}px | Progress: {{ Math.round(section1Progress * 100) }}% | Dir: {{ scrollDirection }}
-    </div>
 
 
     <!-- Three.js Canvas -->
@@ -30,7 +26,7 @@
       <canvas ref="threeCanvas"></canvas>
     </div>
 
-    <!-- Getty-style Scroll Container -->
+    <!-- Scroll Container -->
     <div class="page" :style="{ height: totalHeight + 'px' }">
       <!-- Section Anchors for scroll position tracking -->
       <div class="section-1-anchor" :style="{ top: '0px' }"></div>
@@ -55,7 +51,7 @@
               <div class="featuredAsset assetTransaction__img">
                 <div class="logo-container">
                   <div class="flower flower-logo" logo="" intro="" :style="flowerLogoStyle">
-                    <a class="logo" href="https://bloomtype.com" target="_blank">
+                    <a class="logo">
                       <div class="top"></div>
                       <div class="bottom"></div>
                     </a>
@@ -93,27 +89,27 @@
 
           <!-- PNG Image 1 - Top Left -->
           <div class="png-image png-image-1" :style="pngImage1Style">
-            <img src="/Ballymaloe.png" alt="Ballymaloe project" class="png-img">
+            <img src="/images/portfolio/Ballymaloe.png" alt="Ballymaloe project" class="png-img">
           </div>
 
           <!-- PNG Image 2 - Top Right -->
           <div class="png-image png-image-2" :style="pngImage2Style">
-            <img src="/Bridesmaids.jpg" alt="Bridesmaids project" class="png-img">
+            <img src="/images/portfolio/Bridesmaids.jpg" alt="Bridesmaids project" class="png-img">
           </div>
 
           <!-- PNG Image 3 - Center Left -->
           <div class="png-image png-image-3" :style="pngImage3Style">
-            <img src="/Warmies.png" alt="Warmies project" class="png-img">
+            <img src="/images/portfolio/Warmies.png" alt="Warmies project" class="png-img">
           </div>
 
           <!-- PNG Image 4 - Bottom Right -->
           <div class="png-image png-image-4" :style="pngImage4Style">
-            <img src="/Passport.png" alt="Passport project" class="png-img">
+            <img src="/images/portfolio/Passport.png" alt="Passport project" class="png-img">
           </div>
 
           <!-- PNG Image 5 - Bottom Center -->
           <div class="png-image png-image-5" :style="pngImage5Style">
-            <img src="/Lost.png" alt="Lost project" class="png-img">
+            <img src="/images/portfolio/Lost.png" alt="Lost project" class="png-img">
           </div>
         </div>
 
@@ -126,27 +122,69 @@
           <div class="timeMachine__stack">
             <!-- Image 1 (Front) -->
             <div class="timeMachine__item" :style="timeMachineItem1Style">
-              <img src="/Placeholder(1).jpeg" alt="Time Machine Item 1" class="timeMachine__img">
+              <img src="/images/timemachine/Huddles.png" alt="Time Machine Item 1" class="timeMachine__img">
+              <div class="timeMachine__title" :style="timeMachineTitle1Style">
+                <div class="timeMachine__title-top">Huddles (2025)</div>
+                <div class="timeMachine__title-bottom">Lead Designer</div>
+              </div>
             </div>
 
             <!-- Image 2 -->
             <div class="timeMachine__item" :style="timeMachineItem2Style">
-              <img src="/Placeholder(2).png" alt="Time Machine Item 2" class="timeMachine__img">
+              <img src="/images/timemachine/Huddles(2).png" alt="Time Machine Item 2" class="timeMachine__img">
+              <div class="timeMachine__title" :style="timeMachineTitle2Style">
+                <div class="timeMachine__title-top">Huddles (2025)</div>
+                <div class="timeMachine__title-bottom">Lead Designer</div>
+              </div>
             </div>
 
             <!-- Image 3 -->
             <div class="timeMachine__item" :style="timeMachineItem3Style">
-              <img src="/Placeholder(3).png" alt="Time Machine Item 3" class="timeMachine__img">
+              <img src="/images/timemachine/Calendar.png" alt="Time Machine Item 3" class="timeMachine__img">
+              <div class="timeMachine__title" :style="timeMachineTitle3Style">
+                <div class="timeMachine__title-top">Calendar (2025)</div>
+                <div class="timeMachine__title-bottom">Lead Designer</div>
+              </div>
             </div>
 
             <!-- Image 4 -->
             <div class="timeMachine__item" :style="timeMachineItem4Style">
-              <img src="/Placeholder(1).jpeg" alt="Time Machine Item 4" class="timeMachine__img">
+              <img src="/images/timemachine/Lists.png" alt="Time Machine Item 4" class="timeMachine__img">
+              <div class="timeMachine__title" :style="timeMachineTitle4Style">
+                <div class="timeMachine__title-top">Lists (2024)</div>
+                <div class="timeMachine__title-bottom">Senior Designer</div>
+              </div>
             </div>
 
-            <!-- Image 5 (Back) -->
+            <!-- Image 5 -->
             <div class="timeMachine__item" :style="timeMachineItem5Style">
-              <img src="/Placeholder(2).png" alt="Time Machine Item 5" class="timeMachine__img">
+              <img src="/images/timemachine/Items.png" alt="Time Machine Item 5" class="timeMachine__img">
+              <div class="timeMachine__title" :style="timeMachineTitle5Style">
+                <div class="timeMachine__title-top">Lists (2024)</div>
+                <div class="timeMachine__title-bottom">Senior Designer</div>
+              </div>
+            </div>
+
+            <!-- Image 6 (Back) -->
+            <div class="timeMachine__item" :style="timeMachineItem6Style">
+              <img src="/images/timemachine/Onboarding.gif" alt="Time Machine Item 6" class="timeMachine__img">
+              <div class="timeMachine__title" :style="timeMachineTitle6Style">
+                <div class="timeMachine__title-top">Onboarding (2021)</div>
+                <div class="timeMachine__title-bottom">Lead Designer</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thank You Text Block -->
+          <div class="textBlock__inner text-block-thank-you" :style="thankYouTextInnerStyle">
+            <p>Thank you 🫶🏾</p>
+            <div class="textBlock__icons">
+              <a href="https://www.linkedin.com/in/isha-kumar-29a479125" target="_blank" class="textBlock__icon">
+                <img src="/images/icons/linkedin.svg" alt="LinkedIn" class="icon-linkedin">
+              </a>
+              <a href="https://ishakumar.work/" target="_blank" class="textBlock__icon">
+                <img src="/images/icons/bunny.png" alt="Bunny" class="icon-bunny">
+              </a>
             </div>
           </div>
         </div>
@@ -177,22 +215,22 @@ export default {
     const scrollDirection = ref('down')
     const lastScrollY = ref(0)
 
-    // Getty-style dimensions (using viewport heights like Getty) - Expanded Section 1
+    // Viewport-based dimensions - Expanded Section 1
     const vh = window.innerHeight
-    const totalHeight = ref(vh * 50)  // Increased total height
+    const totalHeight = ref(vh * 45)  // Total height with room for thank you text
     const section1Height = vh * 35    // Much larger Section 1 to accommodate all blocks
     const transaction1Height = vh * 10  // First transaction within section 1
     const transaction2Start = vh * 10   // Second transaction starts
     const transaction2Height = vh * 10  // Second transaction height
     const section2Start = vh * 35     // Section 2 starts later
-    const section2Height = vh * 8     // Compact Section 2 for Time Machine only
+    const section2Height = vh * 10    // Section 2 with room to scroll past last image to thank you text
 
     const sections = ref([
       { progress: 0 },
       { progress: 0 }
     ])
 
-    // Transaction tracking - Getty style with overlapping active states
+    // Transaction tracking with overlapping active states
     const transaction1Progress = ref(0)
     const textBlockProgress = ref(0)
     const textBlock2Progress = ref(0)
@@ -219,7 +257,7 @@ export default {
       return scrollY.value / section1Height
     })
 
-    // Getty-style overlapping transaction logic with directional hysteresis
+    // Overlapping transaction logic with directional hysteresis
     const updateTransactionStates = () => {
       const scrollProgress = scrollY.value / section1Height
 
@@ -315,12 +353,18 @@ export default {
       } else {
         currentSection.value = 2
         const rawProgress = (scrollY.value - section2Start) / section2Height
-        section2Progress.value = Math.max(0, Math.min(1, rawProgress))
-        sections.value[1].progress = section2Progress.value
+        section2Progress.value = Math.max(0, rawProgress) // Allow progress > 1.0
+
+        // For display: show 100% when we've reached the point where text should be visible
+        if (section2Progress.value >= 0.8) {
+          sections.value[1].progress = 1.0
+        } else {
+          sections.value[1].progress = Math.min(1, section2Progress.value / 0.8)
+        }
       }
     }
 
-    // Transaction 1 styles - Getty approach with movement + scaling
+    // Transaction 1 styles with movement + scaling
     const transaction1TopTitleStyle = computed(() => {
       const progress = transaction1Progress.value
 
@@ -379,7 +423,7 @@ export default {
 
     const transaction1MediaStyle = computed(() => {
       const progress = transaction1Progress.value
-      // Getty style: Move slower than titles for parallax effect
+      // Move slower than titles for parallax effect
       const translateY = -(progress * 75) // Move to about -75lvh (slower than titles)
 
       return {
@@ -388,7 +432,7 @@ export default {
     })
 
 
-    // Text block inner style - Getty approach with subtle scale animation
+    // Text block inner style with subtle scale animation
     const textBlockInnerStyle = computed(() => {
       const progress = textBlockProgress.value
 
@@ -397,7 +441,7 @@ export default {
           transform: 'scale(0.85)'
         }
       } else {
-        // Getty uses translate(0px, 0px) when active, with scale animation
+        // Uses translate(0px, 0px) when active, with scale animation
         const scale = 0.85 + (progress * 0.15) // Scale from 0.85 to 1.0
         return {
           transform: `translate(0px, 0px) scale(${scale})`
@@ -414,7 +458,7 @@ export default {
           transform: 'scale(0.85)'
         }
       } else {
-        // Getty uses translate(0px, 0px) when active, with scale animation
+        // Uses translate(0px, 0px) when active, with scale animation
         const scale = 0.85 + (progress * 0.15) // Scale from 0.85 to 1.0
         return {
           transform: `translate(0px, 0px) scale(${scale})`
@@ -422,7 +466,7 @@ export default {
       }
     })
 
-    // Image block styles - Getty three-layer animation
+    // Image block styles - three-layer animation
     const imageBlockContainerStyle = computed(() => {
       const progress = imageBlockProgress.value
 
@@ -478,7 +522,7 @@ export default {
       }
     })
 
-    // Camera/viewport style for the entire imageBlock - Getty-style perspective shift
+    // Camera/viewport style for the entire imageBlock - perspective shift
     const imageBlockCameraStyle = computed(() => {
       if (!imageBlockActive.value) {
         return {
@@ -539,11 +583,12 @@ export default {
         left: '0',
         width: '100%',
         height: '100vh',
-        perspective: '1000px',
+        perspective: '1200px',
         perspectiveOrigin: '50% 50%',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        overflow: 'hidden'
       }
     })
 
@@ -551,50 +596,74 @@ export default {
     // Time Machine cycling logic - two phases: scale-in then cycle
     const getTimeMachineItemStyle = (itemIndex) => {
       const progress = section2Progress.value
-      const totalImages = 5
+      const totalImages = 6
 
-      // Phase 1: Scale in (first 30% of scroll)
-      const scalePhase = Math.min(progress / 0.3, 1)
+      if (progress < 0.2) {
+        // Phase 1: Scale in with fixed stacking positions
+        const scalePhase = progress / 0.2
+        const opacity = scalePhase
 
-      // Phase 2: Cycle through images (remaining 70% of scroll)
-      const cyclePhase = Math.max(0, (progress - 0.3) / 0.7)
+        // Time Machine stacking: each image 15% smaller and positioned higher
+        const stackScale = Math.pow(0.85, itemIndex) // 15% smaller than previous (1.0, 0.85, 0.72, 0.61, 0.52)
+        const finalScale = stackScale * (0.4 + (scalePhase * 0.6)) // Apply overall scale-in
 
-      if (progress < 0.3) {
-        // Phase 1: All images scale in together
-        const baseZ = itemIndex * -50 // Tighter spacing
-        const scale = 0.4 + (scalePhase * 0.6) // Scale from 0.4 to 1.0
-        const opacity = 0.3 + (scalePhase * 0.7) // Fade in
+        // Position each image higher so tops are visible
+        const stackOffsetY = itemIndex * -60 // Position progressively higher to show tops
+        const baseZ = itemIndex * -100 // Z-depth for proper layering
 
         return {
           position: 'absolute',
           top: '50%',
           left: '50%',
-          transform: `translate(-50%, -50%) translateZ(${baseZ}px) scale(${scale})`,
+          transform: `translate(-50%, calc(-50% + ${stackOffsetY}px)) translateZ(${baseZ}px) scale(${finalScale})`,
           opacity: opacity,
+          zIndex: totalImages - itemIndex, // Front image has highest z-index
           transition: 'all 0.2s ease-out'
         }
       } else {
-        // Phase 2: Cycle through images
-        const cyclePosition = cyclePhase * (totalImages - 1) // 0 to 4
-        const activeIndex = Math.round(cyclePosition)
-        const distanceFromActive = Math.abs(itemIndex - activeIndex)
+        // Phase 2: Cycle through the stack - determine which image is currently active
+        const tunnelPhase = (progress - 0.2) / 0.6 // Use 0.6 instead of 0.8 to reach end sooner
+        const rawActiveIndex = tunnelPhase * totalImages // 0 to 5 so we can scroll past the last image
+        const activeImageIndex = Math.round(rawActiveIndex) // Which image should be active (0-5, where 5 means past all images)
 
-        // Position in z-space based on distance from active image
-        const baseZ = distanceFromActive * -100
-        const scale = distanceFromActive === 0 ? 1.0 : Math.max(0.3, 1 - (distanceFromActive * 0.2))
-        const opacity = distanceFromActive === 0 ? 1.0 : Math.max(0.2, 1 - (distanceFromActive * 0.25))
+        // Calculate this image's relative position in the stack from the active image
+        const positionInStack = itemIndex - activeImageIndex
 
-        // Add slight offsets for stacking effect - images behind are slightly offset
-        const offsetX = distanceFromActive * 8 // Horizontal offset in pixels
-        const offsetY = distanceFromActive * 6 // Vertical offset in pixels
+        // Each image maintains its stack characteristics based on position relative to active
+        let stackScale, stackOffsetY, opacity, zIndex
+
+        if (positionInStack < 0) {
+          // This image has been passed - fade out smoothly without scaling
+          stackScale = 1.0 // Keep original size, don't scale down
+          stackOffsetY = 0 // Keep centered position
+          opacity = 0 // Just fade out
+          zIndex = 1
+        } else if (positionInStack === 0) {
+          // This is the active image - front and center
+          stackScale = 1.0
+          stackOffsetY = 0
+          opacity = 1.0
+          zIndex = totalImages + 1
+        } else {
+          // This image is ahead in the stack - adjust position based on how many images are left
+          // Only count images that haven't been passed yet
+          const remainingImagesAhead = totalImages - activeImageIndex - 1
+          const adjustedPosition = positionInStack <= remainingImagesAhead ? positionInStack : remainingImagesAhead + 1
+
+          stackScale = Math.pow(0.85, adjustedPosition)
+          stackOffsetY = adjustedPosition * -60 // Position higher to show tops
+          opacity = adjustedPosition <= remainingImagesAhead ? Math.max(0.4, 0.8 - (adjustedPosition * 0.1)) : 0
+          zIndex = totalImages - adjustedPosition
+        }
 
         return {
           position: 'absolute',
           top: '50%',
           left: '50%',
-          transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) translateZ(${baseZ}px) scale(${scale})`,
+          transform: `translate(-50%, calc(-50% + ${stackOffsetY}px)) translateZ(${positionInStack * -100}px) scale(${stackScale})`,
           opacity: opacity,
-          transition: 'all 0.3s ease-out'
+          zIndex: zIndex,
+          transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
         }
       }
     }
@@ -605,6 +674,86 @@ export default {
     const timeMachineItem3Style = computed(() => getTimeMachineItemStyle(2))
     const timeMachineItem4Style = computed(() => getTimeMachineItemStyle(3))
     const timeMachineItem5Style = computed(() => getTimeMachineItemStyle(4))
+    const timeMachineItem6Style = computed(() => getTimeMachineItemStyle(5))
+
+    // Time Machine Title Styles - only show title for the front image
+    const getTimeMachineTitleStyle = (itemIndex) => {
+      const progress = section2Progress.value
+      if (progress < 0.2) {
+        // No titles during scale-in phase
+        return {
+          opacity: 0,
+          transition: 'opacity 0.3s ease'
+        }
+      } else {
+        // Phase 2: Show title only for active (front) image
+        const tunnelPhase = (progress - 0.2) / 0.6
+        const totalImages = 6
+        const rawActiveIndex = tunnelPhase * totalImages
+        const activeImageIndex = Math.round(rawActiveIndex)
+
+        // Only show title if this is the active image
+        const isActive = activeImageIndex === itemIndex
+        return {
+          opacity: isActive ? 1 : 0,
+          transition: 'opacity 0.3s ease'
+        }
+      }
+    }
+
+    const timeMachineTitle1Style = computed(() => getTimeMachineTitleStyle(0))
+    const timeMachineTitle2Style = computed(() => getTimeMachineTitleStyle(1))
+    const timeMachineTitle3Style = computed(() => getTimeMachineTitleStyle(2))
+    const timeMachineTitle4Style = computed(() => getTimeMachineTitleStyle(3))
+    const timeMachineTitle5Style = computed(() => getTimeMachineTitleStyle(4))
+    const timeMachineTitle6Style = computed(() => getTimeMachineTitleStyle(5))
+
+    // Thank You Text Block - appears after scrolling past all Time Machine images
+    const thankYouTextInnerStyle = computed(() => {
+      const progress = section2Progress.value
+
+      if (progress < 0.2) {
+        // Not visible during scale-in phase
+        return {
+          transform: 'scale(0.85)',
+          opacity: 0,
+          transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        }
+      }
+
+      const tunnelPhase = (progress - 0.2) / 0.6 // Match Time Machine logic
+      const totalImages = 6
+      const rawActiveIndex = tunnelPhase * totalImages // 0 to 5 to match the Time Machine logic
+
+      // Show thank you text when we've completely scrolled past all images
+      if (rawActiveIndex > totalImages) {
+        // Calculate how far past all images we are
+        const pastLastImage = (rawActiveIndex - totalImages) / 1 // Normalize to 0-1
+        const textProgress = Math.min(1, pastLastImage * 3) // Scale faster for quicker appearance
+
+        const scale = 0.3 + (textProgress * 0.7) // Scale from 0.3 to 1.0
+        const opacity = textProgress
+
+        return {
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: `translate(-50%, -50%) scale(${scale})`,
+          opacity: opacity,
+          transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        }
+      }
+
+      // Not visible if we haven't reached the end
+      return {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%) scale(0.3)',
+        opacity: 0,
+        transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      }
+    })
 
     // PNG Image styles - reach full scale by 90% scroll progress
     const pngImage1Style = computed(() => {
@@ -805,6 +954,7 @@ export default {
     })
 
 
+
     // Navigation
     const goToSection = (sectionNumber) => {
       let targetScroll = 0
@@ -928,7 +1078,7 @@ export default {
       mouseX,
       mouseY,
 
-      // Getty-style overlapping transaction states
+      // Overlapping transaction states
       transaction1Active,
       textBlockActive,
       textBlock2Active,
@@ -965,6 +1115,14 @@ export default {
       timeMachineItem3Style,
       timeMachineItem4Style,
       timeMachineItem5Style,
+      timeMachineItem6Style,
+      timeMachineTitle1Style,
+      timeMachineTitle2Style,
+      timeMachineTitle3Style,
+      timeMachineTitle4Style,
+      timeMachineTitle5Style,
+      timeMachineTitle6Style,
+      thankYouTextInnerStyle,
 
       // Methods
       goToSection
