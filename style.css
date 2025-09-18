@@ -17,6 +17,12 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Akke Micro Big Light';
+    src: url('./akke/Akke-MicroBigLight.otf') format('opentype');
+    font-display: swap;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -639,6 +645,15 @@ body {
     transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 
+/* Getty classes for text blocks */
+.paragraph {
+    /* Additional paragraph styling if needed */
+}
+
+.textBodyM {
+    /* Additional text body medium styling if needed */
+}
+
 .section.active .textBlock {
     opacity: 1;
     visibility: visible;
@@ -653,7 +668,7 @@ body {
     position: relative;
     transform: scale(.85);
     will-change: transform;
-    font-family: 'Akke', sans-serif;
+    font-family: 'Akke Micro Big Light', sans-serif;
     font-size: 3rem;
     font-weight: 400;
     letter-spacing: -0.02em;
@@ -702,5 +717,79 @@ body {
         height: 1rem;
         margin-left: .4rem;
         width: 1rem;
+    }
+}
+
+/* Image Block - Getty-style reveal animation */
+.imageBlock {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.imageBlock.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.imageBlock__content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imageBlock__contentInner {
+    position: relative;
+    width: 60vh;
+    height: 60vh;
+    will-change: transform;
+}
+
+.imageBlock__firstImage,
+.imageBlock__secondImage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    will-change: transform;
+}
+
+.imageBlock__firstImage {
+    z-index: 2; /* First image on top */
+}
+
+.imageBlock__secondImage {
+    z-index: 1; /* Second image behind */
+}
+
+.imageBlock__img {
+    max-width: 40vh;
+    max-height: 40vh;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 900px) {
+    .imageBlock__contentInner {
+        width: 80vw;
+        height: 80vw;
+    }
+
+    .imageBlock__img {
+        max-width: 35vw;
+        max-height: 35vw;
     }
 }

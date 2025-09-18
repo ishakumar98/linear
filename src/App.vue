@@ -21,7 +21,7 @@
 
     <!-- Debug Info -->
     <div style="position: fixed; top: 10px; right: 10px; background: green; color: white; padding: 10px; z-index: 10000; font-size: 16px;">
-      Section: {{ currentSection }} | Scroll: {{ Math.round(scrollY) }}px | Progress: {{ Math.round(section1Progress * 100) }}%
+      Section: {{ currentSection }} | Scroll: {{ Math.round(scrollY) }}px | Progress: {{ Math.round(section1Progress * 100) }}% | Dir: {{ scrollDirection }}
     </div>
 
     <!-- Three.js Canvas -->
@@ -68,38 +68,35 @@
           </div>
         </div>
 
-        <!-- Transaction 2: Second content block -->
-        <div class="assetTransaction" :class="{ active: transaction2Active }">
-          <h1 class="transactionTitle title top" :style="transaction2TopTitleStyle">
-            <span class="transactionTitle__inner">Caravaggio</span>
-          </h1>
-          <h1 class="transactionTitle title bottom" :style="transaction2BottomTitleStyle">
-            <span class="transactionTitle__inner">Giuseppe Cesari</span>
-          </h1>
-          <div class="assetTransaction__media" :style="transaction2MediaStyle">
-            <div class="assetTransaction__mediaInner">
-              <div class="featuredAsset assetTransaction__img">
-                <picture class="picture useFade featuredAsset__img loaded">
-                  <source media="(max-width: 1200px)" srcset="/Lilies.jpeg">
-                  <source media="(min-width: 1200px)" srcset="/Lilies.jpeg">
-                  <img src="/Lilies.jpeg" alt="La Jatte de lait by Berthe Morisot" loading="eager">
-                </picture>
-                <div class="imageCredits">
-                  <h2 class="imageCredits__title textPaintingDescription">
-                    <a href="#" target="_blank">Boy with Basket of Fruit</a>, Caravaggio
-                  </h2>
-                  <p class="imageCredits__credit textPaintingDescription small">Galleria Borghese, © Galleria Borghese</p>
-                </div>
+
+        <!-- Text Block 1 (appears during scroll overlap) -->
+        <div class="textBlock paragraph textBodyM" :class="{ active: textBlockActive }" style="left: 50%; top: 50%; transform: translate(-50%, -50%); width: 65rem;">
+          <p class="textBlock__inner" :style="textBlockInnerStyle">
+            I'm currently a senior product designer at Slack. Currently, I lead design for huddles. Before that, I was at Stanford University, where I got my B.S. and M.S. in Computer Science, with a minor in Art History.
+          </p>
+        </div>
+
+        <!-- Text Block 2 (appears after first text block) -->
+        <div class="textBlock paragraph textBodyM" :class="{ active: textBlock2Active }" style="left: 50%; top: 50%; transform: translate(-50%, -50%); width: 65rem;">
+          <p class="textBlock__inner" :style="textBlock2InnerStyle">
+            I am drawn to things that feel both natural and surprising, and I hope to create work that inspires that same feeling in others. I am so excited to be here. Thank you for sharing your time, and your workplace.
+          </p>
+        </div>
+
+        <!-- Image Block (Getty-style reveal animation) -->
+        <div class="imageBlock" :class="{ active: imageBlockActive }">
+          <div class="imageBlock__content">
+            <div class="imageBlock__contentInner" :style="imageBlockContainerStyle">
+              <!-- First Image -->
+              <div class="imageBlock__firstImage" :style="imageBlockFirstImageStyle">
+                <img src="/Placeholder(1).png" alt="First image" class="imageBlock__img">
+              </div>
+              <!-- Second Image -->
+              <div class="imageBlock__secondImage" :style="imageBlockSecondImageStyle">
+                <img src="/Placeholder(2).png" alt="Second image" class="imageBlock__img">
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Text Block (appears when transaction 2 is active) -->
-        <div class="textBlock" :class="{ active: textBlockActive }" :style="textBlockStyle" style="width: 45rem;">
-          <p class="textBlock__inner">
-            300 years earlier in Rome, artist Giuseppe Cesari was Caravaggio's first teacher, and obtained two of the artist's most famous paintings.
-          </p>
         </div>
 
       </div>
@@ -131,15 +128,19 @@ export default {
     const scrollY = ref(0)
     const currentSection = ref(1)
 
-    // Getty-style dimensions (using viewport heights like Getty)
+    // Scroll direction tracking for hysteresis
+    const scrollDirection = ref('down')
+    const lastScrollY = ref(0)
+
+    // Getty-style dimensions (using viewport heights like Getty) - Expanded Section 1
     const vh = window.innerHeight
-    const totalHeight = ref(vh * 40)
-    const section1Height = vh * 20
+    const totalHeight = ref(vh * 50)  // Increased total height
+    const section1Height = vh * 35    // Much larger Section 1 to accommodate all blocks
     const transaction1Height = vh * 10  // First transaction within section 1
     const transaction2Start = vh * 10   // Second transaction starts
     const transaction2Height = vh * 10  // Second transaction height
-    const section2Start = vh * 20
-    const section2Height = vh * 20
+    const section2Start = vh * 35     // Section 2 starts later
+    const section2Height = vh * 15    // Shorter Section 2
 
     const sections = ref([
       { progress: 0 },
@@ -148,13 +149,15 @@ export default {
 
     // Transaction tracking - Getty style with overlapping active states
     const transaction1Progress = ref(0)
-    const transaction2Progress = ref(0)
     const textBlockProgress = ref(0)
+    const textBlock2Progress = ref(0)
+    const imageBlockProgress = ref(0)
 
-    // Active states for overlapping transactions
-    const transaction1Active = ref(false)
-    const transaction2Active = ref(false)
+    // Active states for overlapping transactions - transaction1 starts active
+    const transaction1Active = ref(true)
     const textBlockActive = ref(false)
+    const textBlock2Active = ref(false)
+    const imageBlockActive = ref(false)
 
     // Three.js setup
     let scene, camera, renderer
@@ -167,35 +170,79 @@ export default {
       return scrollY.value / section1Height
     })
 
-    // Getty-style overlapping transaction logic
+    // Getty-style overlapping transaction logic with directional hysteresis
     const updateTransactionStates = () => {
       const scrollProgress = scrollY.value / section1Height
 
-      // Transaction 1: Active from 0% to 80% (elements move -100lvh over this range)
-      if (scrollProgress >= 0 && scrollProgress <= 0.8) {
+      // Update scroll direction
+      const currentDirection = scrollY.value > lastScrollY.value ? 'down' : 'up'
+      if (Math.abs(scrollY.value - lastScrollY.value) > 1) { // Only update if significant movement
+        scrollDirection.value = currentDirection
+      }
+      lastScrollY.value = scrollY.value
+
+      // Handle initial state - if we're at the very beginning, ensure transaction1 is active
+      if (scrollProgress === 0) {
         transaction1Active.value = true
-        transaction1Progress.value = Math.min(1, scrollProgress / 0.8) // 0-1 over first 80%
+        transaction1Progress.value = 0
+        textBlockActive.value = false
+        textBlockProgress.value = 0
+        textBlock2Active.value = false
+        textBlock2Progress.value = 0
+        imageBlockActive.value = false
+        imageBlockProgress.value = 0
+        return
+      }
+
+      // Asset Transaction: Expanded range with more breathing room (0-25%)
+      const transaction1EndThreshold = scrollDirection.value === 'down' ? 0.25 : 0.22
+
+      // Transaction 1: Different end points based on scroll direction
+      if (scrollProgress >= 0 && scrollProgress <= transaction1EndThreshold) {
+        transaction1Active.value = true
+        transaction1Progress.value = Math.min(1, scrollProgress / transaction1EndThreshold)
       } else {
         transaction1Active.value = false
         transaction1Progress.value = 1
       }
 
-      // Transaction 2: Active from 20% to 100% (Caravaggio content)
-      if (scrollProgress >= 0.2 && scrollProgress <= 1.0) {
-        transaction2Active.value = true
-        transaction2Progress.value = Math.min(1, (scrollProgress - 0.2) / 0.8) // 0-1 over 20%-100%
-      } else {
-        transaction2Active.value = false
-        transaction2Progress.value = 0
-      }
+      // Text Block 1: Expanded range (35-55%) with breathing room
+      const textBlock1StartThreshold = scrollDirection.value === 'down' ? 0.35 : 0.32
+      const textBlock1EndThreshold = scrollDirection.value === 'down' ? 0.55 : 0.55
 
-      // Text Block: Active from 50% to 100% (overlaps with Transaction 2)
-      if (scrollProgress >= 0.5 && scrollProgress <= 1.0) {
+      if (scrollProgress >= textBlock1StartThreshold && scrollProgress <= textBlock1EndThreshold) {
         textBlockActive.value = true
-        textBlockProgress.value = Math.min(1, (scrollProgress - 0.5) / 0.5) // 0-1 over 50%-100%
+        const progressRange = textBlock1EndThreshold - textBlock1StartThreshold
+        textBlockProgress.value = Math.min(1, (scrollProgress - textBlock1StartThreshold) / progressRange)
       } else {
         textBlockActive.value = false
         textBlockProgress.value = 0
+      }
+
+      // Text Block 2: Expanded range (65-85%) with more breathing room
+      const textBlock2StartThreshold = scrollDirection.value === 'down' ? 0.65 : 0.65
+      const textBlock2EndThreshold = scrollDirection.value === 'down' ? 0.85 : 0.85
+
+      if (scrollProgress >= textBlock2StartThreshold && scrollProgress <= textBlock2EndThreshold) {
+        textBlock2Active.value = true
+        const progressRange = textBlock2EndThreshold - textBlock2StartThreshold
+        textBlock2Progress.value = Math.min(1, (scrollProgress - textBlock2StartThreshold) / progressRange)
+      } else {
+        textBlock2Active.value = false
+        textBlock2Progress.value = 0
+      }
+
+      // Image Block: Final expanded range (90-100%) as distinct finale
+      const imageBlockStartThreshold = scrollDirection.value === 'down' ? 0.9 : 0.9
+      const imageBlockEndThreshold = 1.0
+
+      if (scrollProgress >= imageBlockStartThreshold && scrollProgress <= imageBlockEndThreshold) {
+        imageBlockActive.value = true
+        const progressRange = imageBlockEndThreshold - imageBlockStartThreshold
+        imageBlockProgress.value = Math.min(1, (scrollProgress - imageBlockStartThreshold) / progressRange)
+      } else {
+        imageBlockActive.value = false
+        imageBlockProgress.value = 0
       }
     }
 
@@ -262,45 +309,92 @@ export default {
       }
     })
 
-    // Transaction 2 styles - starts off-screen, moves into view
-    const transaction2TopTitleStyle = computed(() => {
-      const progress = transaction2Progress.value
 
-      // Start at 100lvh (off-screen), move to final position
-      const translateY = 100 - (progress * 90) // 100lvh → 10lvh
-
-      return {
-        transform: `translate3d(0px, ${translateY}lvh, 0px)`
-      }
-    })
-
-    const transaction2BottomTitleStyle = computed(() => {
-      const progress = transaction2Progress.value
-      const translateY = 100 - (progress * 85) // Different final position
-
-      return {
-        transform: `translate3d(0px, ${translateY}lvh, 0px) scale(0.25)`
-      }
-    })
-
-    const transaction2MediaStyle = computed(() => {
-      const progress = transaction2Progress.value
-      const translateY = 100 - (progress * 95) // Media movement
-
-      return {
-        transform: `translate3d(0px, ${translateY}lvh, 0px)`
-      }
-    })
-
-    // Text block style - Getty approach with subtle scale animation
-    const textBlockStyle = computed(() => {
+    // Text block inner style - Getty approach with subtle scale animation
+    const textBlockInnerStyle = computed(() => {
       const progress = textBlockProgress.value
 
-      // Subtle scale animation like Getty
-      const scale = 0.85 + (progress * 0.15) // Scale from 0.85 to 1.0
+      if (progress === 0) {
+        return {
+          transform: 'scale(0.85)'
+        }
+      } else {
+        // Getty uses translate(0px, 0px) when active, with scale animation
+        const scale = 0.85 + (progress * 0.15) // Scale from 0.85 to 1.0
+        return {
+          transform: `translate(0px, 0px) scale(${scale})`
+        }
+      }
+    })
 
-      return {
-        transform: `translate(-50%, -50%) scale(${scale})`
+    // Text block 2 inner style - same pattern as first text block
+    const textBlock2InnerStyle = computed(() => {
+      const progress = textBlock2Progress.value
+
+      if (progress === 0) {
+        return {
+          transform: 'scale(0.85)'
+        }
+      } else {
+        // Getty uses translate(0px, 0px) when active, with scale animation
+        const scale = 0.85 + (progress * 0.15) // Scale from 0.85 to 1.0
+        return {
+          transform: `translate(0px, 0px) scale(${scale})`
+        }
+      }
+    })
+
+    // Image block styles - Getty three-layer animation
+    const imageBlockContainerStyle = computed(() => {
+      const progress = imageBlockProgress.value
+
+      if (progress === 0) {
+        return {
+          transform: 'translate3d(0%, 0vh, 0px)'
+        }
+      } else {
+        // Container shifts left as animation progresses
+        const translateX = -(progress * 63.9) // Move left to -63.9%
+        const translateY = -(progress * 14.8) // Move up slightly to -14.8vh
+        return {
+          transform: `translate3d(${translateX}%, ${translateY}vh, 0px)`
+        }
+      }
+    })
+
+    const imageBlockFirstImageStyle = computed(() => {
+      const progress = imageBlockProgress.value
+
+      if (progress === 0) {
+        // Include centering translation + scale
+        return {
+          transform: 'translate(-50%, -50%) scale(1, 1)'
+        }
+      } else {
+        // First image scales down slightly, stays centered
+        const scale = 1 - (progress * 0.1) // Scale from 1.0 to 0.9
+        return {
+          transform: `translate(-50%, -50%) scale(${scale}, ${scale})`
+        }
+      }
+    })
+
+    const imageBlockSecondImageStyle = computed(() => {
+      const progress = imageBlockProgress.value
+
+      if (progress === 0) {
+        // Start centered behind first image, smaller scale
+        return {
+          transform: 'translate(-50%, -50%) scale(0.5, 0.5)'
+        }
+      } else {
+        // Second image moves right and scales up
+        const translateX = -50 + (progress * 127.9) // Start centered, move right
+        const translateY = -50 // Stay vertically centered
+        const scale = 0.5 + (progress * 0.39) // Scale from 0.5 to 0.89
+        return {
+          transform: `translate(${translateX}%, ${translateY}%) scale(${scale}, ${scale})`
+        }
       }
     })
 
@@ -437,23 +531,27 @@ export default {
       totalHeight,
       section2Start,
       section1Progress,
+      scrollDirection,
 
       // Getty-style overlapping transaction states
       transaction1Active,
-      transaction2Active,
       textBlockActive,
+      textBlock2Active,
+      imageBlockActive,
       transaction1Progress,
-      transaction2Progress,
       textBlockProgress,
+      textBlock2Progress,
+      imageBlockProgress,
 
       // Computed styles
       transaction1TopTitleStyle,
       transaction1BottomTitleStyle,
       transaction1MediaStyle,
-      transaction2TopTitleStyle,
-      transaction2BottomTitleStyle,
-      transaction2MediaStyle,
-      textBlockStyle,
+      textBlockInnerStyle,
+      textBlock2InnerStyle,
+      imageBlockContainerStyle,
+      imageBlockFirstImageStyle,
+      imageBlockSecondImageStyle,
       section1BackgroundStyle,
 
       // Methods
