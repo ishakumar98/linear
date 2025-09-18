@@ -24,6 +24,15 @@
       Section: {{ currentSection }} | Scroll: {{ Math.round(scrollY) }}px | Progress: {{ Math.round(section1Progress * 100) }}% | Dir: {{ scrollDirection }}
     </div>
 
+    <!-- Flower Debug Info -->
+    <div style="position: fixed; top: 10px; left: 10px; background: blue; color: white; padding: 10px; z-index: 10000; font-size: 12px; max-width: 300px;">
+      <div>Container: {{ flowerDebugInfo.containerSize }}</div>
+      <div>Expected Center: {{ flowerDebugInfo.expectedCenter }}</div>
+      <div>CSS: {{ flowerDebugInfo.cssPosition }}</div>
+      <div>Transform: {{ flowerDebugInfo.transform }}</div>
+      <div>{{ flowerDebugInfo.note }}</div>
+    </div>
+
     <!-- Three.js Canvas -->
     <div class="gl">
       <canvas ref="threeCanvas"></canvas>
@@ -52,16 +61,13 @@
           <div class="assetTransaction__media" :style="transaction1MediaStyle">
             <div class="assetTransaction__mediaInner">
               <div class="featuredAsset assetTransaction__img">
-                <picture class="picture useFade featuredAsset__img loaded">
-                  <source media="(max-width: 1200px)" srcset="/Lilies.jpeg">
-                  <source media="(min-width: 1200px)" srcset="/Lilies.jpeg">
-                  <img src="/Lilies.jpeg" alt="La Jatte de lait by Berthe Morisot" loading="eager">
-                </picture>
-                <div class="imageCredits">
-                  <h2 class="imageCredits__title textPaintingDescription">
-                    <a href="#" target="_blank">La Jatte de lait</a>, Berthe Morisot
-                  </h2>
-                  <p class="imageCredits__credit textPaintingDescription small">Private Collection, Photograph Courtesy of Sotheby's, Inc. ©</p>
+                <div class="logo-container">
+                  <div class="flower flower-logo" logo="" intro="" :style="flowerLogoStyle">
+                    <a class="logo" href="https://bloomtype.com" target="_blank">
+                      <div class="top"></div>
+                      <div class="bottom"></div>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -90,10 +96,22 @@
               <!-- First Image -->
               <div class="imageBlock__firstImage" :style="imageBlockFirstImageStyle">
                 <img src="/Placeholder(1).png" alt="First image" class="imageBlock__img">
+                <div class="imageCredits">
+                  <h2 class="imageCredits__title textPaintingDescription">
+                    <a href="#" target="_blank">First Project Title</a>
+                  </h2>
+                  <p class="imageCredits__credit textPaintingDescription small">Design System Work at Slack</p>
+                </div>
               </div>
               <!-- Second Image -->
               <div class="imageBlock__secondImage" :style="imageBlockSecondImageStyle">
                 <img src="/Placeholder(2).png" alt="Second image" class="imageBlock__img">
+                <div class="imageCredits">
+                  <h2 class="imageCredits__title textPaintingDescription">
+                    <a href="#" target="_blank">Second Project Title</a>
+                  </h2>
+                  <p class="imageCredits__credit textPaintingDescription small">Huddles Feature Development</p>
+                </div>
               </div>
             </div>
           </div>
@@ -366,15 +384,17 @@ export default {
       const progress = imageBlockProgress.value
 
       if (progress === 0) {
-        // Include centering translation + scale
+        // Start centered
         return {
           transform: 'translate(-50%, -50%) scale(1, 1)'
         }
       } else {
-        // First image scales down slightly, stays centered
+        // First image: move LEFT of center using viewport units
+        const translateX = -50 - (progress * 25) // Move to -75% (well left of center)
+        const translateY = -50 // Stay vertically centered
         const scale = 1 - (progress * 0.1) // Scale from 1.0 to 0.9
         return {
-          transform: `translate(-50%, -50%) scale(${scale}, ${scale})`
+          transform: `translate(${translateX}%, ${translateY}%) scale(${scale}, ${scale})`
         }
       }
     })
@@ -388,10 +408,10 @@ export default {
           transform: 'translate(-50%, -50%) scale(0.5, 0.5)'
         }
       } else {
-        // Second image moves right and scales up
-        const translateX = -50 + (progress * 127.9) // Start centered, move right
+        // Second image: move RIGHT of center (positive direction)
+        const translateX = -50 + (progress * 75) // Move to +25% (well right of center)
         const translateY = -50 // Stay vertically centered
-        const scale = 0.5 + (progress * 0.39) // Scale from 0.5 to 0.89
+        const scale = 0.5 + (progress * 0.4) // Scale from 0.5 to 0.9 (same as first)
         return {
           transform: `translate(${translateX}%, ${translateY}%) scale(${scale}, ${scale})`
         }
@@ -420,6 +440,38 @@ export default {
         return {
           background: `rgb(${r}, ${g}, ${b})`
         }
+      }
+    })
+
+    // Flower logo style - animation based on scroll progress
+    const flowerLogoStyle = computed(() => {
+      const progress = transaction1Progress.value
+
+      // Animate rotation based on scroll progress
+      const rotation = progress * 360 // Full rotation during scroll
+      const scale = 0.5 + (progress * 0.5) // Scale from 0.5 to 1.0
+
+      // Include centering translation since JS transform overrides CSS transform
+      return {
+        transform: `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`,
+        transition: progress === 0 ? 'none' : 'transform 0.1s ease-out'
+      }
+    })
+
+    // Debug: Flower position info
+    const flowerDebugInfo = computed(() => {
+      const containerSize = 12 // 12em
+      const expectedCenterX = window.innerWidth / 2
+      const expectedCenterY = window.innerHeight / 2
+      const actualPositionX = expectedCenterX // 50% of viewport
+      const actualPositionY = expectedCenterY // 50% of viewport
+
+      return {
+        containerSize: `${containerSize}em`,
+        expectedCenter: `(${expectedCenterX}px, ${expectedCenterY}px)`,
+        cssPosition: 'top: 50%, left: 50%',
+        transform: 'translate(-50%, -50%)',
+        note: 'Left edge at center suggests transform not working'
       }
     })
 
@@ -553,6 +605,8 @@ export default {
       imageBlockFirstImageStyle,
       imageBlockSecondImageStyle,
       section1BackgroundStyle,
+      flowerLogoStyle,
+      flowerDebugInfo,
 
       // Methods
       goToSection

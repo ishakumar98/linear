@@ -793,3 +793,249 @@ body {
         max-height: 35vw;
     }
 }
+
+/* Bloomtype Flower Logo - Complete Implementation */
+.logo-container {
+    width: 12em; /* 4x larger */
+    height: 12em; /* 4x larger */
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+a.logo {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    pointer-events: all;
+    text-align: center;
+    text-decoration: none;
+}
+
+a.logo:hover {
+    border-bottom: none;
+    animation: rotate 1s
+}
+
+.flower {
+    display: inline-block;
+    position: relative;
+    width: 12em; /* 4x larger */
+    height: 12em; /* 4x larger */
+    cursor: pointer;
+    animation-duration: 1s;
+    transition: 2s ease-in-out transform;
+    animation-fill-mode: both;
+    transform-origin: center center;
+}
+
+.flower[logo]:after {
+    transition: background 1s;
+    background: #FECCF1; /* Center color */
+}
+
+.flower[logo] .top:before,.flower[logo] .top:after,.flower[logo] .bottom:before,.flower[logo] .bottom:after {
+    transition: background 1s;
+    background: #FE4D9F; /* Petal color */
+}
+
+.flower:after {
+    content: "";
+    display: inline-block;
+    width: 50%;
+    height: 50%;
+    top: 25%;
+    left: 25%;
+    background: #FECCF1;
+    position: absolute;
+    border-radius: 100%;
+    pointer-events: none
+}
+
+.flower .top,.flower .bottom {
+    width: 100%;
+    height: 100%;
+    position: absolute
+}
+
+.flower .top:before,.flower .top:after,.flower .bottom:before,.flower .bottom:after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    background: #FE4D9F;
+    border-radius: 100%;
+    animation-duration: 1s;
+    animation-fill-mode: both
+}
+
+.flower[intro] .top:before,.flower[intro] .top:after,.flower[intro] .bottom:before,.flower[intro] .bottom:after {
+    animation-direction: normal;
+    animation-delay: 1.25s
+}
+
+.flower[intro] .top:before {
+    animation-name: topLeft
+}
+
+.flower[intro] .top:after {
+    animation-name: topRight
+}
+
+.flower[intro] .bottom:before {
+    animation-name: bottomLeft
+}
+
+.flower[intro] .bottom:after {
+    animation-name: bottomRight
+}
+
+.flower[outro] .top:before {
+    animation-name: topLeftOut
+}
+
+.flower[outro] .top:after {
+    animation-name: topRightOut
+}
+
+.flower[outro] .bottom:before {
+    animation-name: bottomLeftOut
+}
+
+.flower[outro] .bottom:after {
+    animation-name: bottomRightOut
+}
+
+.flower-logo {
+    top: 0.25em;
+    left: calc(50% - 1.75em);
+    z-index: 20;
+    animation: scaleUp 1s;
+    animation-fill-mode: forwards
+}
+
+@keyframes fadeIn {
+    0% {
+        transform: translate(-1%)
+    }
+    100% {
+        transform: translate(0%)
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        transform: translate(0%)
+    }
+    100% {
+        transform: translate(-1%)
+    }
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(0%, 0%) rotate(0)
+    }
+    100% {
+        transform: scale(100%, 100%) rotate(1turn)
+    }
+}
+
+@keyframes topLeft {
+    0% {
+        transform: translate(0%, 0%)
+    }
+    100% {
+        transform: translate(-50%, 50%)
+    }
+}
+
+@keyframes bottomLeft {
+    0% {
+        transform: translate(0%, 0%)
+    }
+    100% {
+        transform: translate(-50%, -50%)
+    }
+}
+
+@keyframes topRight {
+    0% {
+        transform: translate(0%, 0%)
+    }
+    100% {
+        transform: translate(50%, 50%)
+    }
+}
+
+@keyframes bottomRight {
+    0% {
+        transform: translate(0%, 0%)
+    }
+    100% {
+        transform: translate(50%, -50%)
+    }
+}
+
+@keyframes scaleDown {
+    0% {
+        transform: scale(100%, 100%) rotate(1turn)
+    }
+    100% {
+        transform: scale(0%, 0%) rotate(0)
+    }
+}
+
+@keyframes topLeftOut {
+    0% {
+        transform: translate(-50%, 50%)
+    }
+    100% {
+        transform: translate(0%, 0%)
+    }
+}
+
+@keyframes bottomLeftOut {
+    0% {
+        transform: translate(-50%, -50%)
+    }
+    100% {
+        transform: translate(0%, 0%)
+    }
+}
+
+@keyframes topRightOut {
+    0% {
+        transform: translate(50%, 50%)
+    }
+    100% {
+        transform: translate(0%, 0%)
+    }
+}
+
+@keyframes bottomRightOut {
+    0% {
+        transform: translate(50%, -50%)
+    }
+    100% {
+        transform: translate(0%, 0%)
+    }
+}
